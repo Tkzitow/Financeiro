@@ -1,0 +1,2 @@
+
+Para utilizar o FireDac   é necessário utilizar o arquivo  libmysql.dll    32bits   no FDPhysMySQLDriverLink ********************

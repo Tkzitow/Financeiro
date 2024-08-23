@@ -1,0 +1,1048 @@
+unit uRegistros;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, uDados, uDataModule, DateUtils;
+
+type
+  TFmlRegistros = class(TForm)
+    p_: TPanel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel1: TPanel;
+    dbGridSaidaRegistro: TDBGrid;
+    dbgridEntradaRegistro: TDBGrid;
+    lvOrigemEntradaRegistro: TListView;
+    cbOrigemEntradaRegistro: TComboBox;
+    btOkOrigemEntradaRegistro: TButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    edObservassaoEntradaRegistro: TEdit;
+    Label4: TLabel;
+    lvContaEntradaRegistro: TListView;
+    cbDataEntradaRegistro: TComboBox;
+    cbValorEntradaRegistro: TComboBox;
+    edValorEntradaRegistro1: TEdit;
+    edValorEntradaRegistro2: TEdit;
+    dtDataEntradaRegistro1: TDateTimePicker;
+    dtDataEntradaRegistro2: TDateTimePicker;
+    btBuscarEntradaRegistro: TButton;
+    btLimparEntradaRegistro: TButton;
+    Panel2: TPanel;
+    pValorTotalEntradaRegistro: TPanel;
+    btExcluiEntradaRegistro: TButton;
+    btOkContaEntradaRegistro: TButton;
+    Panel4: TPanel;
+    lvFinalidadeSaidaRegistro: TListView;
+    lvItemSaidaRegistro: TListView;
+    lvContaSaidaRegistro: TListView;
+    cbValorSaidaRegistro: TComboBox;
+    cbDataSaidaRegistro: TComboBox;
+    edValorSaidaRegistro1: TEdit;
+    edValorSaidaRegistro2: TEdit;
+    edObservassaoSaidaRegistro: TEdit;
+    dtDataSaidaRegistro1: TDateTimePicker;
+    dtDataSaidaRegistro2: TDateTimePicker;
+    btBuscarSaidaRegistro: TButton;
+    btLimparSaidaRegistro: TButton;
+    btExcluirSaidaRegistro: TButton;
+    cbItemFixoSaidaRegistro: TComboBox;
+    Label3: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    cbFinalidadeSaidaRegistro: TComboBox;
+    cbItemSaidaRegistro: TComboBox;
+    cbContaSaidaRegistro: TComboBox;
+    btOkFinalidadeSaidaRegistro: TButton;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    pValorTotalSaidaRegistro: TPanel;
+    Panel6: TPanel;
+    cbContaEntradaRegistro: TComboBox;
+    edValorEntradaRegistroUnico: TEdit;
+    cbDataEntradaMesRegistro: TComboBox;
+    rgOrdernarBusca: TRadioGroup;
+    btOkItemSaidaRegistro: TButton;
+    btOkContaSaidaRegistro: TButton;
+    rgOrdenarSaidaRegistro: TRadioGroup;
+    edValorSaidaRegistroUnico: TEdit;
+    cbDataSaidaMesRegistro: TComboBox;
+    procedure FormCreate(Sender: TObject);
+    procedure cbValorEntradaRegistroChange(Sender: TObject);
+    procedure cbDataEntradaRegistroChange(Sender: TObject);
+    procedure btBuscarEntradaRegistroClick(Sender: TObject);
+    procedure btOkOrigemEntradaRegistroClick(Sender: TObject);
+    procedure btOkContaEntradaRegistroClick(Sender: TObject);
+    procedure edValorEntradaRegistro1Click(Sender: TObject);
+    procedure edValorEntradaRegistro2Click(Sender: TObject);
+    procedure edValorEntradaRegistroUnicoClick(Sender: TObject);
+    procedure edObservassaoEntradaRegistroClick(Sender: TObject);
+    procedure lvContaEntradaRegistroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure lvOrigemEntradaRegistroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btLimparEntradaRegistroClick(Sender: TObject);
+    procedure btExcluiEntradaRegistroClick(Sender: TObject);
+    procedure edValorEntradaRegistroUnicoChange(Sender: TObject);
+    procedure edValorEntradaRegistro1Change(Sender: TObject);
+    procedure edValorEntradaRegistro2Change(Sender: TObject);
+    procedure btOkFinalidadeSaidaRegistroClick(Sender: TObject);
+    procedure btOkItemSaidaRegistroClick(Sender: TObject);
+    procedure btOkContaSaidaRegistroClick(Sender: TObject);
+    procedure lvFinalidadeSaidaRegistroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure lvItemSaidaRegistroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure lvContaSaidaRegistroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cbValorSaidaRegistroChange(Sender: TObject);
+    procedure cbDataSaidaRegistroChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btBuscarSaidaRegistroClick(Sender: TObject);
+    procedure btLimparSaidaRegistroClick(Sender: TObject);
+    procedure edValorSaidaRegistroUnicoClick(Sender: TObject);
+    procedure edValorSaidaRegistro1Click(Sender: TObject);
+    procedure edValorSaidaRegistro2Click(Sender: TObject);
+    procedure edObservassaoSaidaRegistroClick(Sender: TObject);
+    procedure btExcluirSaidaRegistroClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dbgridEntradaRegistroDblClick(Sender: TObject); virtual;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure AdicionarInformacaoComponentes;
+    procedure validarPosicaoComponentes;
+    procedure AdicionarRegistroEntrada;
+    procedure AdicionarRegistroSaida;
+    procedure AdicionarItemListView(cb_Item : TComboBox; lv_Item : TListView);
+    procedure doubleClickDbGrid; virtual;
+
+
+  end;
+
+var
+  FmlRegistros: TFmlRegistros;
+
+  query : TDataModule1;
+  dados : dadosGlobais;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFmlRegistros.AdicionarInformacaoComponentes;
+var
+  i : integer;
+begin
+  for I := 0 to High(arrOrigem) do begin
+    cbOrigemEntradaRegistro.Items.Add(arrOrigem[i]);
+  end;
+
+  for I := 0 to High(arrConta) do begin
+    cbContaEntradaRegistro.Items.Add(arrConta[i]);
+    cbContaSaidaRegistro.Items.Add(arrConta[i]);
+  end;
+
+  for I := 0 to High(arrFinalidade) do begin
+    cbFinalidadeSaidaRegistro.Items.Add(arrFinalidade[i]);
+  end;
+
+  for I := 0 to High(arrItem) do begin
+    cbItemSaidaRegistro.Items.Add(arrItem[i]);
+  end;
+
+
+  cbValorSaidaRegistro.Items.Add('Não Filtrar');
+  cbValorSaidaRegistro.Items.Add('Maior ou igual');
+  cbValorSaidaRegistro.Items.Add('Menor ou igual');
+  cbValorSaidaRegistro.Items.Add('Intervalo de Valores');
+  cbValorSaidaRegistro.Text := cbValorSaidaRegistro.Items[0];
+
+
+  cbValorEntradaRegistro.Items.Add('Não Filtrar');
+  cbValorEntradaRegistro.Items.Add('Maior ou igual');
+  cbValorEntradaRegistro.Items.Add('Menor ou igual');
+  cbValorEntradaRegistro.Items.Add('Intervalo de Valores');
+  cbValorEntradaRegistro.Text := cbValorEntradaRegistro.Items[0];
+
+
+  cbDataSaidaRegistro.Items.Add('Mês');
+  cbDataSaidaRegistro.Items.Add('Intervalo de Datas');
+  cbDataSaidaRegistro.Text := cbDataSaidaRegistro.Items[1];
+
+  cbDataEntradaRegistro.Items.Add('Mês');
+  cbDataEntradaRegistro.Items.Add('Intervalo de Datas');
+  cbDataEntradaRegistro.Text := cbDataEntradaRegistro.Items[1];
+
+  cbDataEntradaMesRegistro.Clear;
+  cbDataEntradaMesRegistro.Text := FormatDateTime('mmmm', now);
+  cbDataEntradaMesRegistro.Items.Add('janeiro');
+  cbDataEntradaMesRegistro.Items.Add('fevereiro');
+  cbDataEntradaMesRegistro.Items.Add('março');
+  cbDataEntradaMesRegistro.Items.Add('abril');
+  cbDataEntradaMesRegistro.Items.Add('maio');
+  cbDataEntradaMesRegistro.Items.Add('junho');
+  cbDataEntradaMesRegistro.Items.Add('julho');
+  cbDataEntradaMesRegistro.Items.Add('agosto');
+  cbDataEntradaMesRegistro.Items.Add('setembro');
+  cbDataEntradaMesRegistro.Items.Add('outubro');
+  cbDataEntradaMesRegistro.Items.Add('novembro');
+  cbDataEntradaMesRegistro.Items.Add('dezembro');
+
+  cbDataSaidaMesRegistro.Clear;
+  cbDataSaidaMesRegistro.Text := FormatDateTime('mmmm', now);
+  cbDataSaidaMesRegistro.Items.Add('janeiro');
+  cbDataSaidaMesRegistro.Items.Add('fevereiro');
+  cbDataSaidaMesRegistro.Items.Add('março');
+  cbDataSaidaMesRegistro.Items.Add('abril');
+  cbDataSaidaMesRegistro.Items.Add('maio');
+  cbDataSaidaMesRegistro.Items.Add('junho');
+  cbDataSaidaMesRegistro.Items.Add('julho');
+  cbDataSaidaMesRegistro.Items.Add('agosto');
+  cbDataSaidaMesRegistro.Items.Add('setembro');
+  cbDataSaidaMesRegistro.Items.Add('outubro');
+  cbDataSaidaMesRegistro.Items.Add('novembro');
+  cbDataSaidaMesRegistro.Items.Add('dezembro');
+
+  cbItemFixoSaidaRegistro.Items.Add('Não Filtrar');
+  cbItemFixoSaidaRegistro.Items.Add('Sim');
+  cbItemFixoSaidaRegistro.Items.Add('Não');
+  cbItemFixoSaidaRegistro.Text := cbItemFixoSaidaRegistro.Items[0];
+
+
+  dtDataEntradaRegistro1.Date := StartOfTheMonth(now);
+  dtDataEntradaRegistro2.Date := now;
+
+  dtDataSaidaRegistro1.Date := StartOfTheMonth(now);
+  dtDataSaidaRegistro2.Date := now;
+
+end;
+
+
+procedure TFmlRegistros.AdicionarItemListView(cb_Item: TComboBox; lv_Item: TListView);
+  var
+    i : Integer;
+    texto : string;
+    validar_texto_listview : Boolean;
+    indice_item_listview :  Integer;
+
+begin
+  if cb_item.Text <> '' then
+    begin
+      texto := cb_item.Text;
+      validar_texto_listview := true;
+      indice_item_listview := 0;
+
+      for I := 0 to lv_Item.Items.Count - 1 do begin
+        if texto = lv_Item.Items[i].Caption then
+          begin
+            validar_texto_listview := false;
+            indice_item_listview := i;
+          end;
+      end;
+
+      if validar_texto_listview then
+        begin
+          lv_Item.Items.Add.Caption := texto;
+          cb_item.Text := '';
+        end
+        else
+        begin
+          lv_item.Selected := lv_item.Items[indice_item_listview];
+          cb_item.Text := '';
+        end;
+    end;
+
+  cb_item.Text := '';
+end;
+
+procedure TFmlRegistros.AdicionarRegistroEntrada;
+var
+  i : integer;
+  origem_entrada : string;
+  conta_entrada : string;
+  data_entrada : string;
+  valor_entrada : string;
+  observassao_entrada : string;
+  valor_total_query : Double;
+  ordenar_entrada : string;
+
+begin
+  try
+    query.Query2.Close;
+
+    origem_entrada := '';
+    conta_entrada := '';
+    data_entrada := '';
+    valor_entrada := '';
+    observassao_entrada := '';
+
+    with query.Query2 do
+      begin
+        if lvOrigemEntradaRegistro.Items.Count > 0 then
+          begin
+            for I := 0 to lvOrigemEntradaRegistro.Items.Count - 1 do  begin
+              if i = 0 then
+                begin
+                  origem_entrada :=  QuotedStr(lvOrigemEntradaRegistro.Items[i].Caption);
+                end
+                else
+                begin
+                  origem_entrada := origem_entrada + ', ' + QuotedStr(lvOrigemEntradaRegistro.Items[i].Caption);
+                end;
+
+            end;
+
+            origem_entrada := 'and origem in(' + origem_entrada + ')';
+
+          end
+          else
+          begin
+             origem_entrada := ''
+          end;
+
+        if lvContaEntradaRegistro.Items.count > 0 then
+          begin
+            for I := 0 to lvContaEntradaRegistro.Items.Count - 1 do begin
+              if i = 0 then
+                begin
+                  conta_entrada := QuotedStr(lvContaEntradaRegistro.Items[i].Caption);
+                end
+                else
+                begin
+                  conta_entrada := conta_entrada + ', ' + QuotedStr(lvContaEntradaRegistro.Items[i].Caption);
+                end;
+            end;
+
+            conta_entrada := 'and conta in(' + conta_entrada + ')';
+
+          end
+          else
+          begin
+            conta_entrada := '';
+          end;
+
+
+        if cbValorEntradaRegistro.Text = 'Maior ou igual' then
+          begin
+            if high(edValorEntradaRegistroUnico.Text) > 0 then
+              valor_entrada := 'and valor_entrada >= ' + edValorEntradaRegistroUnico.Text
+            else
+              begin
+                edValorEntradaRegistroUnico.SetFocus;
+                exit
+              end;
+          end
+          else if cbValorEntradaRegistro.Text = 'Menor ou igual' then
+          begin
+            if high(edValorEntradaRegistroUnico.Text) > 0 then
+              valor_entrada := 'and valor_entrada <= ' + edValorEntradaRegistroUnico.Text
+              else
+              begin
+                edValorEntradaRegistroUnico.SetFocus;
+                exit
+              end;
+          end
+          else if cbValorEntradaRegistro.Text = 'Intervalo de Valores' then
+          begin
+            if high(edValorEntradaRegistro1.Text) > 0 then
+              begin
+                if high(edValorEntradaRegistro2.Text) > 0 then
+                  valor_entrada := 'and valor_entrada between ' + edValorEntradaRegistro1.Text + ' and '  + edValorEntradaRegistro2.Text
+                else
+                begin
+                  edValorEntradaRegistro2.SetFocus;
+                  exit
+                end;
+              end
+              else
+              begin
+              edValorEntradaRegistro1.SetFocus;
+              exit
+              end;
+          end
+          else if cbValorEntradaRegistro.Text = 'Não Filtrar' then
+            valor_entrada := '';
+
+
+        if cbDataEntradaRegistro.Text = 'Mês' then
+          data_entrada := 'and month(data_entrada) = ' + dados.localizar_mes(cbDataEntradaMesRegistro.Text).ToString
+        else if cbDataEntradaRegistro.Text = 'Intervalo de Datas' then
+          data_entrada := 'and data_entrada between ' + QuotedStr(formatdatetime('yyyy-mm-dd', dtDataEntradaRegistro1.Date))  + ' and ' + QuotedStr(formatdatetime('yyyy-mm-dd', dtDataEntradaRegistro2.Date));
+
+
+        if high(edObservassaoEntradaRegistro.Text) > 0 then
+          observassao_entrada := 'and obs_entrada like ''%' + edObservassaoEntradaRegistro.Text + '%''';
+
+
+        case rgOrdernarBusca.ItemIndex of
+          0: ordenar_entrada := 'order by data desc';
+          1: ordenar_entrada := 'order by origem';
+          2: ordenar_entrada := 'order by valor asc';
+          3: ordenar_entrada := 'order by valor desc';
+        end;
+
+
+        sql.Clear;
+        sql.Add('select');
+        SQL.Add('id_entrada as ID,');
+        SQL.Add('origem as Origem,');
+        SQL.Add('conta as Conta,');
+        SQL.Add('valor_entrada as Valor,');
+        SQL.Add('Data_entrada as Data,');
+        SQL.Add('obs_entrada as Observação');
+        SQL.Add('from entradas');
+        SQL.Add('inner join origem');
+        SQL.Add('on entradas.id_origem = origem.id_origem');
+        SQL.Add('inner join conta');
+        SQL.Add('on entradas.id_conta = conta.id_conta');
+        SQL.Add('where entradas.id_usuario = :pUser');
+        SQL.Add(origem_entrada);
+        SQL.Add(conta_entrada);
+        SQL.Add(valor_entrada);
+        SQL.Add(data_entrada);
+        SQL.Add(observassao_entrada);
+        SQL.Add(ordenar_entrada);
+
+
+        ParamByName('pUser').AsInteger := id_usuarioLogado;
+
+      end;
+
+    dbgridEntradaRegistro.DataSource := query.DataSource1;
+    query.Query2.active := true;
+    query.Query2.Open();
+
+
+    for I := 0 to dbgridEntradaRegistro.Columns.Count - 2 do begin
+      dbgridEntradaRegistro.Columns[i].Alignment := taCenter;
+    end;
+
+
+    while not query.Query2.Eof do begin
+
+      valor_total_query := valor_total_query + query.Query2.FieldByName('valor').AsFloat;
+
+      query.Query2.Next
+    end;
+
+    pValorTotalEntradaRegistro.Caption := formatfloat('#,##0.00', valor_total_query);
+
+    dbgridEntradaRegistro.DataSource.DataSet.First;
+  except
+    ShowMessage('Erro na tela Relatório/Registros/Entradas');
+  end;
+
+end;
+
+procedure TFmlRegistros.AdicionarRegistroSaida;
+var
+  i : integer;
+  finalidade_saida : string;
+  item_saida : string;
+  conta_saida : string;
+  valor_saida : string;
+  data_saida : string;
+  observassao_saida : string;
+  item_fixo_saida : string;
+  ordenar_saida : string;
+  valor_total_query : double;
+
+begin
+  try
+    query.Query1.Close;
+
+    finalidade_saida := '';
+    item_saida := '';
+    conta_saida := '';
+    valor_saida := '';
+    data_saida := '';
+    observassao_saida := '';
+    ordenar_saida := '';
+    item_fixo_saida := '';
+
+    if lvFinalidadeSaidaRegistro.Items.Count > 0 then
+      begin
+        for I := 0 to lvFinalidadeSaidaRegistro.Items.Count - 1 do begin
+          if i = 0 then
+            finalidade_saida := QuotedStr(lvFinalidadeSaidaRegistro.Items[i].Caption)
+          else
+            finalidade_saida := finalidade_saida + ', ' + QuotedStr(lvFinalidadeSaidaRegistro.Items[i].Caption);
+        end;
+
+        finalidade_saida := 'and finalidade in(' + finalidade_saida + ')';
+      end;
+
+
+    if lvItemSaidaRegistro.Items.Count > 0 then
+      begin
+        for I := 0 to lvItemSaidaRegistro.Items.Count - 1 do begin
+          if i = 0 then
+            item_saida := QuotedStr(lvItemSaidaRegistro.Items[i].Caption)
+          else
+            item_saida := item_saida + ', ' + QuotedStr(lvItemSaidaRegistro.Items[i].Caption);
+        end;
+        item_saida := 'and item in(' + item_saida + ')';
+      end;
+
+    if lvContaSaidaRegistro.Items.Count > 0 then
+      begin
+        for I := 0 to lvContaSaidaRegistro.Items.Count - 1 do begin
+          if i = i then
+            conta_saida := QuotedStr(lvContaSaidaRegistro.Items[i].Caption)
+          else
+            conta_saida := conta_saida + ', ' + QuotedStr(lvContaSaidaRegistro.Items[i].Caption);
+        end;
+        conta_saida := 'and conta in(' + conta_saida + ')';
+      end;
+
+    if cbValorSaidaRegistro.Text = 'Maior ou igual' then
+      begin
+        if high(edValorSaidaRegistroUnico.Text) > 0 then
+          valor_saida := 'and valor_saida >= ' + edValorSaidaRegistroUnico.Text
+        else
+        begin
+          edValorSaidaRegistroUnico.SetFocus;
+          exit
+        end;
+      end
+      else if cbValorSaidaRegistro.Text = 'Menor ou igual' then
+      begin
+        if high(edValorSaidaRegistroUnico.Text) > 0 then
+          valor_saida := 'and valor_saida <= ' + edValorSaidaRegistroUnico.Text
+        else
+        begin
+          edValorSaidaRegistroUnico.SetFocus;
+          exit
+        end;
+      end
+      else if cbValorSaidaRegistro.Text = 'Intervalo de Valores' then
+      begin
+        if high(edValorSaidaRegistro1.Text) > 0 then
+          begin
+            if high(edValorSaidaRegistro2.Text) > 0 then
+                valor_saida := 'and valor_saida between ' + edValorSaidaRegistro1.Text + ' and ' + edValorSaidaRegistro2.Text
+              else
+              begin
+                edValorSaidaRegistro2.SetFocus;
+                exit
+              end
+          end
+          else
+          begin
+            edValorSaidaRegistro1.SetFocus;
+            exit
+          end;
+      end
+      else if cbValorSaidaRegistro.Text = 'Não Filtrar' then
+      begin
+        valor_saida := '';
+      end;
+
+
+    if cbDataSaidaRegistro.Text = 'Mês' then
+      data_saida := 'and month(data_saida) = ' + dados.localizar_mes(cbDataSaidaMesRegistro.Text).ToString
+    else if cbDataSaidaRegistro.Text = 'Intervalo de Datas' then
+      data_saida := 'and data_saida between ' + QuotedStr(formatdatetime('yyyy-mm-dd', dtDataSaidaRegistro1.Date)) + ' and ' + QuotedStr(formatdatetime('yyyy-mm-dd', dtDataSaidaRegistro2.Date));
+
+
+    if high(edObservassaoSaidaRegistro.Text) > 0 then
+      observassao_saida := 'and obs_saida like ' + '''%' + edObservassaoSaidaRegistro.Text + '%''';
+
+    if cbItemFixoSaidaRegistro.Text = 'Não Filtrar' then
+      item_fixo_saida := ''
+    else if cbItemFixoSaidaRegistro.Text = 'Não' then
+      item_fixo_saida := 'and fixo like ''n'''
+    else if cbItemFixoSaidaRegistro.Text = 'Sim' then
+      item_fixo_saida := 'and fixo like ''s''';
+
+    case rgOrdenarSaidaRegistro.ItemIndex of
+      0:  ordenar_saida := 'order by data desc';
+      1:  ordenar_saida := 'order by valor asc';
+      2:  ordenar_saida := 'order by finalidade';
+      3:  ordenar_saida := 'order by valor desc';
+      4:  ordenar_saida := 'order by item';
+    end;
+
+
+
+    with query.Query1 do
+      begin
+
+        SQL.Clear;
+        SQL.Add('select');
+        SQL.Add('id_saida as ID,');
+        SQL.Add('Finalidade,');
+        SQL.Add('Item,');
+        SQL.Add('valor_saida as Valor,');
+        SQL.Add('Conta,');
+        SQL.Add('Fixo,');
+        SQL.Add('data_saida as Data,');
+        SQL.Add('obs_saida as Observação');
+        SQL.Add('from');
+        SQL.Add('saidas');
+        SQL.Add('inner join finalidade');
+        SQL.Add('on saidas.id_finalidade = finalidade.id_finalidade');
+        SQL.Add('inner join item');
+        SQL.Add('on saidas.id_item = item.id_item');
+        SQL.Add('inner join conta');
+        SQL.Add('on saidas.id_conta = conta.id_conta');
+        SQL.Add('where saidas.id_usuario = :pUser');
+        SQL.Add(finalidade_saida);
+        SQL.Add(item_saida);
+        SQL.Add(conta_saida);
+        SQL.Add(valor_saida);
+        SQL.Add(data_saida);
+        SQL.Add(observassao_saida);
+        SQL.Add(item_fixo_saida);
+        SQL.Add(ordenar_saida);
+
+
+        ParamByName('pUser').AsInteger := id_usuarioLogado;
+
+        dbGridSaidaRegistro.DataSource := query.DataSource2;
+        active := true;
+        open();
+
+        while not eof do begin
+          valor_total_query := valor_total_query + FieldByName('valor').AsFloat;
+          next;
+        end;
+
+
+      end;
+
+    for I := 0 to dbGridSaidaRegistro.Columns.Count - 2 do begin
+      dbGridSaidaRegistro.Columns[i].Alignment := taCenter;
+    end;
+
+    pValorTotalSaidaRegistro.Caption := formatfloat('#,##0.00', valor_total_query);
+
+    dbGridSaidaRegistro.DataSource.DataSet.First;
+  except
+    ShowMessage('Erro na tela de Registro - Saídas');
+  end;
+end;
+
+procedure TFmlRegistros.btBuscarEntradaRegistroClick(Sender: TObject);
+begin
+  adicionarRegistroEntrada;
+end;
+
+procedure TFmlRegistros.btBuscarSaidaRegistroClick(Sender: TObject);
+begin
+  AdicionarRegistroSaida;
+end;
+
+procedure TFmlRegistros.btExcluiEntradaRegistroClick(Sender: TObject);
+var
+  id : integer;
+  origem, texto : string;
+  valor : double;
+begin
+  try
+    if (dbgridEntradaRegistro.DataSource <> nil) and (dbgridEntradaRegistro.DataSource.DataSet <> nil) and (dbgridEntradaRegistro.DataSource.DataSet.RecordCount > 0) then
+      begin
+        id := dbgridEntradaRegistro.DataSource.DataSet.FieldByName('id').AsInteger;
+        origem := dbgridEntradaRegistro.DataSource.DataSet.FieldByName('Origem').AsString;
+        valor := dbgridEntradaRegistro.DataSource.DataSet.FieldByName('Valor').AsFloat;
+
+        texto := 'Deseja excluí o registro de entrada ' + #13
+                + ' -  ID:   ' + id.ToString + #13
+                + ' -  Origem:   ' + origem + #13
+                + ' -  Valor:   R$' + formatFloat('#,##0.00', valor);
+
+        if application.MessageBox(PChar(texto), '', MB_YESNO) = mrYes then
+          begin
+            query.Query1.SQL.Clear;
+            query.Query1.SQL.Add('delete from ENTRADAS where ID_ENTRADA = :pId');
+            query.Query1.ParamByName('pId').AsInteger := id;
+            query.Query1.ExecSQL;
+
+            btBuscarEntradaRegistro.Click;
+          end
+          else
+          begin
+            ShowMessage('Operação CANCELADA!!!');
+          end;
+
+      end
+      else
+      begin
+        btBuscarEntradaRegistro.SetFocus;
+      end;
+
+  except
+    ShowMessage('Erro ao deletar registro de ENTRADA');
+  end;
+
+end;
+
+procedure TFmlRegistros.btExcluirSaidaRegistroClick(Sender: TObject);
+var
+  id : integer;
+  item, texto : string;
+  valor : double;
+begin
+    try
+
+    if (dbGridSaidaRegistro.DataSource <> nil) and (dbGridSaidaRegistro.DataSource.DataSet <> nil) and (dbGridSaidaRegistro.DataSource.DataSet.RecordCount > 0) then
+      begin
+        id := dbGridSaidaRegistro.DataSource.DataSet.FieldByName('id').AsInteger;
+        item := dbGridSaidaRegistro.DataSource.DataSet.FieldByName('Item').AsString;
+        valor := dbGridSaidaRegistro.DataSource.DataSet.FieldByName('Valor').AsFloat;
+
+
+        texto := 'Deseja excluí o registro de entrada ' + #13
+                + ' -  ID:   ' + id.ToString + #13
+                + ' -  Origem:   ' + item + #13
+                + ' -  Valor:   R$' + formatFloat('#,##0.00', valor);
+
+        if application.MessageBox(PChar(texto), 'Deletar Registro', MB_YESNO) = mrYes then
+          begin
+            query.Query1.SQL.Clear;
+            query.Query1.SQL.Add('delete from SAIDAS where ID_SAIDA = :pId');
+            query.Query1.ParamByName('pId').AsInteger := id;
+            query.Query1.ExecSQL;
+
+            btBuscarSaidaRegistro.Click;
+          end
+          else
+          begin
+            ShowMessage('Operação CANCELADA!!!!');
+          end;
+      end
+      else
+      begin
+        btBuscarSaidaRegistro.SetFocus;
+      end;
+
+  except
+    ShowMessage('Erro ao excluir SAÍDA');
+  end;
+end;
+
+procedure TFmlRegistros.btLimparEntradaRegistroClick(Sender: TObject);
+begin
+  query.Query2.close;
+
+  lvOrigemEntradaRegistro.Clear;
+  lvContaEntradaRegistro.Clear;
+  cbOrigemEntradaRegistro.Text := '';
+  cbContaEntradaRegistro.Text := '';
+  edValorEntradaRegistro1.Text := '';
+  edValorEntradaRegistro2.Text := '';
+  edValorEntradaRegistroUnico.Text := '';
+  edObservassaoEntradaRegistro.Text := '';
+  pValorTotalEntradaRegistro.Caption := '';
+
+  dtDataEntradaRegistro1.Date := StartOfTheMonth(now);
+  dtDataEntradaRegistro2.Date := now;
+
+  cbDataEntradaMesRegistro.Text := FormatDateTime('mmmm', now);
+
+end;
+
+procedure TFmlRegistros.btLimparSaidaRegistroClick(Sender: TObject);
+begin
+  query.Query1.Close;
+
+  lvFinalidadeSaidaRegistro.Clear;
+  lvItemSaidaRegistro.Clear;
+  lvContaSaidaRegistro.Clear;
+  cbFinalidadeSaidaRegistro.Text := '';
+  cbItemSaidaRegistro.Text := '';
+  cbContaSaidaRegistro.Text := '';
+  cbItemFixoSaidaRegistro.Text := cbItemFixoSaidaRegistro.Items[0];
+  cbValorSaidaRegistro.Text := cbValorSaidaRegistro.Items[0];
+  edValorSaidaRegistro1.clear;
+  edValorSaidaRegistro2.Clear;
+  edValorSaidaRegistroUnico.Clear;
+  cbDataSaidaRegistro.Text := cbDataSaidaRegistro.Items[0];
+  dtDataSaidaRegistro1.Date := StartOfTheMonth(now);
+  dtDataSaidaRegistro2.Date := now;
+  edObservassaoSaidaRegistro.Clear;
+  rgOrdenarSaidaRegistro.ItemIndex := 0;
+  cbDataSaidaMesRegistro.Text := formatDateTime('mmmm', now);
+  pValorTotalSaidaRegistro.Caption := '';
+
+  validarPosicaoComponentes;
+  cbFinalidadeSaidaRegistro.SetFocus;
+end;
+
+procedure TFmlRegistros.btOkContaEntradaRegistroClick(Sender: TObject);
+begin
+  AdicionarItemListView(cbContaEntradaRegistro, lvContaEntradaRegistro);
+end;
+
+procedure TFmlRegistros.btOkContaSaidaRegistroClick(Sender: TObject);
+begin
+  AdicionarItemListView(cbContaSaidaRegistro, lvContaSaidaRegistro);
+end;
+
+procedure TFmlRegistros.btOkFinalidadeSaidaRegistroClick(Sender: TObject);
+begin
+  AdicionarItemListView(cbFinalidadeSaidaRegistro, lvFinalidadeSaidaRegistro);
+end;
+
+procedure TFmlRegistros.btOkItemSaidaRegistroClick(Sender: TObject);
+begin
+  AdicionarItemListView(cbItemSaidaRegistro, lvItemSaidaRegistro);
+end;
+
+procedure TFmlRegistros.btOkOrigemEntradaRegistroClick(Sender: TObject);
+begin
+  AdicionarItemListView(cbOrigemEntradaRegistro, lvOrigemEntradaRegistro);
+end;
+
+procedure TFmlRegistros.cbDataEntradaRegistroChange(Sender: TObject);
+begin
+  validarPosicaoComponentes;
+end;
+
+procedure TFmlRegistros.cbDataSaidaRegistroChange(Sender: TObject);
+begin
+  validarPosicaoComponentes;
+end;
+
+procedure TFmlRegistros.cbValorEntradaRegistroChange(Sender: TObject);
+begin
+  validarPosicaoComponentes;
+end;
+
+procedure TFmlRegistros.cbValorSaidaRegistroChange(Sender: TObject);
+begin
+  validarPosicaoComponentes;
+end;
+
+procedure TFmlRegistros.dbgridEntradaRegistroDblClick(Sender: TObject);
+begin
+  doubleClickDbGrid;
+end;
+
+procedure TFmlRegistros.doubleClickDbGrid;
+begin
+
+end;
+
+procedure TFmlRegistros.edObservassaoEntradaRegistroClick(Sender: TObject);
+begin
+  edObservassaoEntradaRegistro.SetFocus;
+end;
+
+procedure TFmlRegistros.edObservassaoSaidaRegistroClick(Sender: TObject);
+begin
+  edObservassaoSaidaRegistro.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistro1Change(Sender: TObject);
+begin
+  TratarEditValor(sender);
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistro1Click(Sender: TObject);
+begin
+  edValorEntradaRegistro1.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistro2Change(Sender: TObject);
+begin
+  TratarEditValor(sender);
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistro2Click(Sender: TObject);
+begin
+  edValorEntradaRegistro2.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistroUnicoChange(Sender: TObject);
+begin
+  TratarEditValor(sender);
+end;
+
+procedure TFmlRegistros.edValorEntradaRegistroUnicoClick(Sender: TObject);
+begin
+  edValorEntradaRegistroUnico.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorSaidaRegistro1Click(Sender: TObject);
+begin
+  edValorSaidaRegistro1.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorSaidaRegistro2Click(Sender: TObject);
+begin
+  edValorSaidaRegistro2.SetFocus;
+end;
+
+procedure TFmlRegistros.edValorSaidaRegistroUnicoClick(Sender: TObject);
+begin
+  edValorSaidaRegistroUnico.SetFocus;
+end;
+
+procedure TFmlRegistros.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  open_busca := false;
+end;
+
+procedure TFmlRegistros.FormCreate(Sender: TObject);
+begin
+
+  AdicionarInformacaoComponentes;
+
+  query := TDataModule1.Create(nil);
+
+end;
+
+procedure TFmlRegistros.FormShow(Sender: TObject);
+begin
+  validarPosicaoComponentes;
+end;
+
+procedure TFmlRegistros.lvContaEntradaRegistroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+    if (key = VK_DELETE) and (lvContaEntradaRegistro.Selected <> nil) then
+      lvContaEntradaRegistro.Selected.Delete;
+end;
+
+procedure TFmlRegistros.lvContaSaidaRegistroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if (key = VK_DELETE) and (lvContaSaidaRegistro.Selected <> nil) then
+    lvContaSaidaRegistro.Selected.Delete;
+end;
+
+procedure TFmlRegistros.lvFinalidadeSaidaRegistroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if (key = VK_DELETE) and (lvFinalidadeSaidaRegistro.Selected <> nil) then
+    lvFinalidadeSaidaRegistro.Selected.Delete;
+end;
+
+procedure TFmlRegistros.lvItemSaidaRegistroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if (key = vk_delete) and (lvItemSaidaRegistro.Selected <> nil) then
+    lvItemSaidaRegistro.Selected.Delete;
+end;
+
+procedure TFmlRegistros.lvOrigemEntradaRegistroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if (key = VK_DELETE) and (lvOrigemEntradaRegistro.Selected <> nil) then
+    lvOrigemEntradaRegistro.Selected.Delete;
+end;
+
+procedure TFmlRegistros.validarPosicaoComponentes;
+begin
+  if cbValorEntradaRegistro.Text = 'Não Filtrar' then
+    begin
+      edValorEntradaRegistro1.Visible := false;
+      edValorEntradaRegistro2.Visible := false;
+      edValorEntradaRegistroUnico.Visible := true;
+      edValorEntradaRegistro1.Clear;
+      edValorEntradaRegistro2.Clear;
+      edValorEntradaRegistroUnico.Clear;
+    end
+  else if cbValorEntradaRegistro.Text = 'Maior ou igual' then
+    begin
+      edValorEntradaRegistro1.Visible := false;
+      edValorEntradaRegistro2.Visible := false;
+      edValorEntradaRegistroUnico.Visible := true;
+      edValorEntradaRegistro1.Clear;
+      edValorEntradaRegistro2.Clear;
+    end
+    else if cbValorEntradaRegistro.Text = 'Menor ou igual' then
+    begin
+      edValorEntradaRegistro1.Visible := false;
+      edValorEntradaRegistro2.Visible := false;
+      edValorEntradaRegistroUnico.Visible := true;
+      edValorEntradaRegistro1.Clear;
+      edValorEntradaRegistro2.Clear;
+    end
+    else if cbValorEntradaRegistro.Text = 'Intervalo de Valores' then
+    begin
+      edValorEntradaRegistro1.Visible := true;
+      edValorEntradaRegistro2.Visible := true;
+      edValorEntradaRegistroUnico.Visible := false;
+      edValorEntradaRegistroUnico.Clear;
+    end;
+
+  if cbDataEntradaRegistro.Text = 'Mês' then
+    begin
+      cbDataEntradaMesRegistro.Visible := true;
+      dtDataEntradaRegistro1.Visible := false;
+      dtDataEntradaRegistro2.Visible := false;
+    end
+    else if cbDataEntradaRegistro.text = 'Intervalo de Datas' then
+    begin
+      cbDataEntradaMesRegistro.Visible := false;
+      dtDataEntradaRegistro1.Visible := true;
+      dtDataEntradaRegistro2.Visible := true;
+    end;
+
+  //
+
+    if cbValorSaidaRegistro.Text = 'Não Filtrar' then
+    begin
+      edValorSaidaRegistro1.Visible := false;
+      edValorSaidaRegistro2.Visible := false;
+      edValorSaidaRegistroUnico.Visible := true;
+      edValorSaidaRegistro1.Clear;
+      edValorSaidaRegistro2.Clear;
+      edValorEntradaRegistroUnico.Clear;
+    end
+  else if cbValorSaidaRegistro.Text = 'Maior ou igual' then
+    begin
+      edValorSaidaRegistro1.Visible := false;
+      edValorSaidaRegistro2.Visible := false;
+      edValorSaidaRegistroUnico.Visible := true;
+      edValorSaidaRegistro1.Clear;
+      edValorSaidaRegistro2.Clear;
+    end
+    else if cbValorSaidaRegistro.Text = 'Menor ou igual' then
+    begin
+      edValorSaidaRegistro1.Visible := false;
+      edValorSaidaRegistro2.Visible := false;
+      edValorSaidaRegistroUnico.Visible := true;
+      edValorSaidaRegistro1.Clear;
+      edValorSaidaRegistro2.Clear;
+    end
+    else if cbValorSaidaRegistro.Text = 'Intervalo de Valores' then
+    begin
+      edValorSaidaRegistro1.Visible := true;
+      edValorSaidaRegistro2.Visible := true;
+      edValorSaidaRegistroUnico.Visible := false;
+      edValorSaidaRegistroUnico.Clear;
+    end;
+
+  if cbDataSaidaRegistro.Text = 'Mês' then
+    begin
+      cbDataSaidaMesRegistro.Visible := true;
+      dtDataSaidaRegistro1.Visible := false;
+      dtDataSaidaRegistro2.Visible := false;
+    end
+    else if cbDataSaidaRegistro.text = 'Intervalo de Datas' then
+    begin
+      cbDataSaidaMesRegistro.Visible := false;
+      dtDataSaidaRegistro1.Visible := true;
+      dtDataSaidaRegistro2.Visible := true;
+    end;
+
+end;
+
+end.

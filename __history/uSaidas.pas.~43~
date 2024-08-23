@@ -1,0 +1,443 @@
+﻿unit uSaidas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, uDados,
+  uDataModule;
+
+type
+  Tfml_saidas = class(TForm)
+    Panel1: TPanel;
+    cb_finalidade_saidas: TComboBox;
+    cb_item_saidas: TComboBox;
+    edt_valor_saidas: TEdit;
+    edt_qtd: TEdit;
+    grid_data_saida: TDateTimePicker;
+    edt_obs_saidas: TEdit;
+    cb_conta_saidas: TComboBox;
+    btn_ok_saidas: TButton;
+    btn_cancelar_saidas: TButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    btn_limpar_saidas: TButton;
+    CheckBox1: TCheckBox;
+    Panel2: TPanel;
+    edt_saida_id: TEdit;
+    Label8: TLabel;
+    procedure edt_qtdClick(Sender: TObject);
+    procedure edt_valor_saidasClick(Sender: TObject);
+    procedure edt_obs_saidasClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btn_cancelar_saidasClick(Sender: TObject);
+    procedure btn_limpar_saidasClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btn_ok_saidasClick(Sender: TObject);
+    procedure edt_valor_saidasChange(Sender: TObject);
+    procedure edt_qtdChange(Sender: TObject);
+    procedure cb_finalidade_saidasChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure edt_saida_idClick(Sender: TObject);
+    procedure edt_saida_idKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure saida_cadastro;
+    procedure adicionar_cb_saida;
+    procedure AtivarDesativarComponentesSaida;
+    procedure EditarRegistroSaida;
+
+  end;
+
+var
+  fml_saidas: Tfml_saidas;
+  Query : TDataModule1;
+  dados : dadosGlobais;
+  id_saida : integer;
+  finalidade_saida : string;
+  item_saida : string;
+  conta_saida : string;
+  item_fixo_saida : string;
+  valor_saida : double;
+  quantidade_saida : integer;
+  data_saida : TDate;
+  obs_saida : string;
+  validar_edicao_saida_id : boolean;
+  ativar_desativar_componentes : boolean;
+
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfml_saidas.adicionar_cb_saida;
+var
+  i : integer;
+begin
+
+  for I := 0 to High(arrFinalidade) do
+    begin
+      cb_finalidade_saidas.Items.Add(arrFinalidade[i]);
+    end;
+
+  for I := 0 to High(arrConta) do
+    begin
+      cb_conta_saidas.Items.Add(arrConta[i]);
+    end;
+
+  for I := 0 to High(arrItem) do
+    begin
+      cb_item_saidas.Items.Add(arrItem[i]);
+    end;
+
+end;
+
+procedure Tfml_saidas.AtivarDesativarComponentesSaida;
+
+begin
+  //operador_controle = true -> componentes ligado
+  //operador_controle = false -> componentes desligado
+
+  if ativar_desativar_componentes then begin
+    cb_finalidade_saidas.Enabled := true;
+    cb_item_saidas.Enabled := true;
+    cb_conta_saidas.Enabled := true;
+    CheckBox1.Enabled := true;
+    edt_valor_saidas.Enabled := true;
+    edt_qtd.Enabled := true;
+    grid_data_saida.Enabled := true;
+    edt_obs_saidas.Enabled := true;
+    btn_ok_saidas.Enabled := true;
+    btn_limpar_saidas.Enabled := true;
+
+    ativar_desativar_componentes := false;
+  end
+  else
+  begin
+    cb_finalidade_saidas.Enabled := false;
+    cb_item_saidas.Enabled := false;
+    cb_conta_saidas.Enabled := false;
+    CheckBox1.Enabled := false;
+    edt_valor_saidas.Enabled := false;
+    edt_qtd.Enabled := false;
+    grid_data_saida.Enabled := false;
+    edt_obs_saidas.Enabled := false;
+    btn_ok_saidas.Enabled := false;
+    btn_limpar_saidas.Enabled := false;
+
+    ativar_desativar_componentes := true;
+  end;
+end;
+
+procedure Tfml_saidas.btn_cancelar_saidasClick(Sender: TObject);
+begin
+  self.Close;
+end;
+
+procedure Tfml_saidas.btn_limpar_saidasClick(Sender: TObject);
+begin
+  cb_finalidade_saidas.Text := '';
+  cb_item_saidas.Text := '';
+  cb_conta_saidas.Text := '';
+  edt_valor_saidas.Clear;
+  edt_qtd.Text := 1.tostring;
+  CheckBox1.Checked := false;
+  grid_data_saida.Date := now;
+  edt_saida_id.Clear;
+  edt_obs_saidas.Clear;
+
+  AtivarDesativarComponentesSaida;
+
+  validar_edicao_saida_id := false;
+
+  edt_saida_id.SetFocus;
+
+end;
+
+procedure Tfml_saidas.btn_ok_saidasClick(Sender: TObject);
+begin
+  if Application.MessageBox('Gravar Saida', '', MB_YESNO) = mrYes then
+    begin
+      saida_cadastro;
+      btn_limpar_saidas.Click;
+    end
+    else
+    begin
+      ShowMessage('Gravação Cancelada!!!!');
+    end;
+
+end;
+
+procedure Tfml_saidas.cb_finalidade_saidasChange(Sender: TObject);
+begin
+  dados.listas;
+end;
+
+procedure Tfml_saidas.EditarRegistroSaida;
+begin
+  try
+      if edt_saida_id.Text <> '' then begin
+        id_saida := strtoint(edt_saida_id.Text);
+
+        if id_saida > 0 then begin
+          with query.Query1 do begin
+            sql.Clear;
+            sql.Add('select finalidade.finalidade as finalidade,');
+            sql.Add(' item.item as item,');
+            sql.Add(' conta.conta as conta,');
+            sql.Add(' fixo as item_fixo,');
+            sql.Add(' quantidade,');
+            sql.Add(' valor_saida as valor,');
+            sql.Add(' data_saida as data,');
+            sql.Add(' obs_saida as obs ');
+            sql.Add('from saidas');
+            sql.Add('inner join finalidade');
+            sql.Add('on saidas.id_finalidade = finalidade.id_finalidade');
+            sql.Add('inner join item');
+            sql.Add('on saidas.id_item = item.id_item');
+            sql.Add('inner join conta');
+            sql.Add('on saidas.id_conta = conta.id_conta');
+            sql.Add('where id_saida = :pId ');
+            sql.Add('and saidas.id_usuario = :pUser');
+            ParamByName('pId').AsInteger := id_saida;
+            ParamByName('pUser').AsInteger := id_usuarioLogado;
+            Open();
+
+            if not eof then begin
+              AtivarDesativarComponentesSaida;
+
+
+              finalidade_saida := FieldByName('finalidade').AsString;
+              item_saida := FieldByName('item').AsString;
+              conta_saida := FieldByName('conta').AsString;
+              item_fixo_saida := FieldByName('item_fixo').AsString;
+              quantidade_saida := FieldByName('quantidade').AsInteger;
+              valor_saida := FieldByName('valor').AsFloat;
+              data_saida := FieldByName('data').AsDateTime;
+              obs_saida := FieldByName('obs').AsString;
+
+
+              cb_finalidade_saidas.Text := finalidade_saida;
+              cb_item_saidas.Text := item_saida;
+              cb_conta_saidas.Text := conta_saida;
+
+              if item_fixo_saida = 's' then
+                CheckBox1.Checked := true
+              else
+                CheckBox1.Checked := false;
+
+              edt_qtd.Text := inttostr(quantidade_saida);
+              edt_valor_saidas.Text := formatfloat('#,##0.00', valor_Saida);
+              grid_data_saida.Date := data_saida;
+              edt_obs_saidas.Text := obs_saida;
+
+              validar_edicao_saida_id := true;
+            end
+            else
+            begin
+              ShowMessage('O ID - ' + id_saida.ToString + ' não exister nos registros!');
+
+            end;
+
+          end;
+
+        end
+        else
+        begin
+          ShowMessage('Campo ID inválido!');
+        end;
+
+      end
+      else
+      begin
+        AtivarDesativarComponentesSaida;
+
+        cb_finalidade_saidas.SetFocus;
+      end;
+
+  except
+    ShowMessage('Erro na Edição de SAÍDAS!');
+  end;
+end;
+
+procedure Tfml_saidas.edt_obs_saidasClick(Sender: TObject);
+begin
+  edt_obs_saidas.SetFocus;
+end;
+
+procedure Tfml_saidas.edt_qtdChange(Sender: TObject);
+var
+  i : integer;
+  n, v : string;
+  o : boolean;
+begin
+  //Mascara para edt_valor_entrada aceitar somente números e ,
+  n := '0123456789,';
+  v := edt_qtd.Text;
+
+  if edt_qtd.Text <> '' then
+    begin
+      for I := 1 to High(n) do
+        begin
+          if n[i] = v[high(v)] then
+            begin
+              o := true;
+            end;
+        end;
+
+     if not o then
+      begin
+        Delete(v, high(v), 1);
+      end;
+
+     edt_qtd.Text := v;
+     edt_qtd.SelStart := length(v);
+    end;
+end;
+
+procedure Tfml_saidas.edt_qtdClick(Sender: TObject);
+begin
+  edt_qtd.SetFocus;
+end;
+
+procedure Tfml_saidas.edt_saida_idClick(Sender: TObject);
+begin
+  edt_saida_id.SetFocus;
+end;
+
+procedure Tfml_saidas.edt_saida_idKeyPress(Sender: TObject; var Key: Char);
+begin
+ try
+    if key = #13 then begin
+      EditarRegistroSaida;
+    end;
+
+  except
+    ShowMessage('Erro na Edição de SAÍDAS!');
+  end;
+end;
+
+procedure Tfml_saidas.edt_valor_saidasChange(Sender: TObject);
+var
+  i : integer;
+  n, v : string;
+  o : boolean;
+begin
+  //Mascara para edt_valor_entrada aceitar somente números e ,
+  n := '0123456789,';
+  v := edt_valor_saidas.Text;
+
+  if edt_valor_saidas.Text <> '' then
+    begin
+      for I := 1 to High(n) do
+        begin
+          if n[i] = v[high(v)] then
+            begin
+              o := true;
+            end;
+        end;
+
+     if not o then
+      begin
+        Delete(v, high(v), 1);
+      end;
+
+     edt_valor_saidas.Text := v;
+     edt_valor_saidas.SelStart := length(v);
+    end;
+end;
+
+procedure Tfml_saidas.edt_valor_saidasClick(Sender: TObject);
+begin
+  edt_valor_saidas.SetFocus;
+end;
+
+procedure Tfml_saidas.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  open_saidas := false;
+  Query.Destroy;
+end;
+
+procedure Tfml_saidas.FormCreate(Sender: TObject);
+begin
+  Query := TDataModule1.Create(nil);
+
+  grid_data_saida.Date := now;
+  adicionar_cb_saida;
+
+  ativar_desativar_componentes := false;
+
+  AtivarDesativarComponentesSaida;
+end;
+
+procedure Tfml_saidas.FormShow(Sender: TObject);
+begin
+  edt_saida_id.SetFocus;
+end;
+
+procedure Tfml_saidas.saida_cadastro;
+begin
+  With Query.Query1 do
+    begin
+      if validar_edicao_saida_id then begin
+        sql.Clear;
+        sql.Add('update SAIDAS set');
+        sql.Add('ID_FINALIDADE = :pFinalidade,');
+        sql.Add('ID_ITEM = :pItem,');
+        sql.Add('QUANTIDADE = :pQtd,');
+        sql.Add('VALOR_SAIDA = :pValor,');
+        sql.Add('ID_CONTA = :pConta,');
+        sql.Add('DATA_SAIDA = :pData,');
+        sql.Add('FIXO = :pFixo,');
+        sql.Add('OBS_SAIDA = :pObs');
+        sql.Add('where ID_SAIDA = :pId');
+        ParamByName('pFinalidade').AsInteger := dados.localizar_id(cb_finalidade_saidas.Text, 1);
+        ParamByName('pItem').AsInteger := dados.localizar_id(cb_item_saidas.Text, 2);
+        ParamByName('pQtd').AsInteger := StrToInt(edt_qtd.Text);
+        ParamByName('pValor').AsFloat := StrToFloat(edt_valor_saidas.Text) * strtoint(edt_qtd.Text);
+        ParamByName('pConta').AsInteger := dados.localizar_id(cb_conta_saidas.Text, 4);
+        ParamByName('pData').AsDate := grid_data_saida.Date;
+
+        if CheckBox1.Checked = true then
+          ParamByName('pFixo').AsString := 's'
+        else
+          ParamByName('pFixo').AsString := 'n';
+
+        ParamByName('pObs').AsString := edt_obs_saidas.Text;
+        ParamByName('pId').AsInteger := id_saida;
+        ExecSQL;
+      end
+      else
+      begin
+        sql.Clear;
+        sql.Add('insert into SAIDAS (ID_FINALIDADE, ID_ITEM, QUANTIDADE, VALOR_SAIDA, ID_CONTA, DATA_SAIDA, FIXO, OBS_SAIDA, ID_USUARIO) VALUES' +
+                '(:pFinalidade, :pItem, :pQtd, :pValor, :pConta, :pData, :pFixo, :pObs, :pUser)');
+        ParamByName('pFinalidade').AsInteger := dados.localizar_id(cb_finalidade_saidas.Text, 1);
+        ParamByName('pItem').AsInteger := dados.localizar_id(cb_item_saidas.Text, 2);
+        ParamByName('pQtd').AsInteger := StrToInt(edt_qtd.Text);
+        ParamByName('pValor').AsFloat := StrToFloat(edt_valor_saidas.Text) * strtoint(edt_qtd.Text);
+        ParamByName('pConta').AsInteger := dados.localizar_id(cb_conta_saidas.Text, 4);
+        ParamByName('pData').AsDate := grid_data_saida.Date;
+
+        if CheckBox1.Checked = true then
+          ParamByName('pFixo').AsString := 's'
+        else
+          ParamByName('pFixo').AsString := 'n';
+
+        ParamByName('pObs').AsString := edt_obs_saidas.Text;
+        ParamByName('pUser').AsInteger := id_usuarioLogado;
+        ExecSQL;
+      end;
+
+    end;
+
+end;
+
+end.

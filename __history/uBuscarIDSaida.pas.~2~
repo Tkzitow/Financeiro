@@ -1,0 +1,27 @@
+unit uBuscarIDSaida;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRegistros, Data.DB, Vcl.StdCtrls,
+  Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TFmlRegistros2 = class(TFmlRegistros)
+    btn_selecionar_registro_saida: TButton;
+    btn_cancelar_registro_saida: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FmlRegistros2: TFmlRegistros2;
+
+implementation
+
+{$R *.dfm}
+
+end.

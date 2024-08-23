@@ -1,0 +1,29 @@
+program Financeiro_v3;
+
+uses
+  Vcl.Forms,
+  uLogin in 'uLogin.pas' {fml_login},
+  uMain in 'uMain.pas' {fml_main},
+  uDados in 'uDados.pas',
+  uDataModule in 'uDataModule.pas' {DataModule1: TDataModule},
+  uEntradas in 'uEntradas.pas' {fml_entradas},
+  uSaidas in 'uSaidas.pas' {fml_saidas},
+  uComparativo in 'uComparativo.pas' {fml_comparativo},
+  uRelatorio in 'uRelatorio.pas' {fml_relatorio},
+  uCfg in 'uCfg.pas' {fml_cfg},
+  uInvestimentos in 'uInvestimentos.pas' {fml_investimentos};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(Tfml_relatorio, fml_relatorio);
+  Application.CreateForm(Tfml_saidas, fml_saidas);
+  Application.CreateForm(Tfml_main, fml_main);
+  Application.CreateForm(Tfml_login, fml_login);
+  Application.CreateForm(TDataModule1, DataModule1);
+  Application.CreateForm(Tfml_investimentos, fml_investimentos);
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
+  Application.Run;
+end.

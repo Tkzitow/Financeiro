@@ -1,0 +1,11 @@
+inherited FmlRegistros1: TFmlRegistros1
+  Caption = 'FmlRegistros1'
+  TextHeight = 15
+  inherited p_: TPanel
+    inherited PageControl1: TPageControl
+      inherited TabSheet2: TTabSheet
+        TabVisible = False
+      end
+    end
+  end
+end
