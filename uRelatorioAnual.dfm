@@ -91,10 +91,8 @@ object fmlRelatorioAnual: TfmlRelatorioAnual
         Align = alClient
         Columns = <
           item
-            AutoSize = True
             Caption = 'Item'
-            MaxWidth = 100
-            MinWidth = 100
+            Width = 120
           end
           item
             Alignment = taCenter
@@ -173,8 +171,6 @@ object fmlRelatorioAnual: TfmlRelatorioAnual
         ViewStyle = vsReport
         OnAdvancedCustomDrawItem = lvRelatorioAnualAdvancedCustomDrawItem
         OnAdvancedCustomDrawSubItem = lvRelatorioAnualAdvancedCustomDrawSubItem
-        ExplicitLeft = 2
-        ExplicitTop = 6
       end
     end
   end

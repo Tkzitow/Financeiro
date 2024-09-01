@@ -2,7 +2,7 @@
 
 interface
 
-uses uDataModule, Messages, Vcl.Dialogs, SysUtils, Vcl.StdCtrls;
+uses uDataModule, Messages, Vcl.Dialogs, SysUtils, Vcl.StdCtrls, ShellAPI, DateUtils;
 
 type
   dadosGlobais = class
@@ -11,6 +11,7 @@ type
       function localizar_id(strTexto : string; intTabela : integer): integer;
       function localizar_mes(strTexto : string): integer;
       procedure listas;
+      procedure backupBanco;
 
   end;
 
@@ -19,6 +20,14 @@ var
   nome_usuarioLogado : string;
 
   data_inicio : TDateTime;
+  data_ult_backup : TDateTime;
+  data_prox_backup : TDateTime;
+  exec_backup : boolean;
+  periodo_salvar_backup : integer;
+
+  local_arquivo_backup : string;
+  nome_backup : string;
+
 
   variacao_relatorio_anual : integer;
 
@@ -42,6 +51,91 @@ procedure TratarEditValor(Sender: TObject);
 implementation
 
 { dadosGlobais }
+
+procedure dadosGlobais.backupBanco;
+var
+  mysqldump : string;
+  query : TDataModule1;
+  dia_para_backup : integer;
+begin
+  try
+
+    local_arquivo_backup := '';
+
+    query := TDataModule1.Create(nil);
+
+
+    query.Query1.SQL.Clear;
+    query.Query1.SQL.Add('select CAMINHO_BACKUP, DATA_ULT_BACKUP, DATA_PROX_BACKUP, PERIODO_SALVAR_BACKUP from CONFIGURACAO where ID_USUARIO = :pUser');
+    query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    query.Query1.Open();
+
+
+    local_arquivo_backup := query.Query1.FieldByName('CAMINHO_BACKUP').AsString;
+    data_prox_backup := query.Query1.FieldByName('DATA_PROX_BACKUP').AsDateTime;
+    data_ult_backup := query.Query1.FieldByName('DATA_ULT_BACKUP').AsDateTime;
+    dia_para_backup := query.Query1.FieldByName('PERIODO_SALVAR_BACKUP').AsInteger;
+
+    case dia_para_backup of
+      0 : dia_para_backup := DaysInMonth(date);
+      1 : dia_para_backup := 1;
+      2 : dia_para_backup := (DaysInMonth(date) div 2);
+      3 : dia_para_backup := DaysInMonth(date);
+    end;
+
+    if (data_prox_backup < now) or (exec_backup) then
+      begin
+        nome_backup := '\backup_dofs_' + nome_usuarioLogado + '_' + formatdatetime('ddmmyyyy', now) + '.sql';
+
+        if local_arquivo_backup.IsEmpty then
+          begin
+            with TFileOpenDialog.Create(nil) do
+              begin
+                Options := [fdoPickFolders];
+                if execute then
+                  local_arquivo_backup := filename;
+              end;
+          end;
+
+        mysqldump := Format('cmd.exe /C mysqldump -u %s -p%s -h %s %s > "%s"',
+          ['root', '123456', 'localhost', 'dofs', local_arquivo_backup + nome_backup]);
+
+        ShellExecute(0, 'open', 'cmd.exe', Pchar(mysqldump), nil, ABS_AUTOHIDE);
+
+
+        if data_prox_backup <= now then
+          begin
+            data_prox_backup := EncodeDate(yearOf(date), monthOf(date), dia_para_backup);
+            data_prox_backup := IncMonth(now);
+          end;
+
+
+        query.Query1.SQL.Clear;
+        query.Query1.SQL.Add('update CONFIGURACAO set DATA_ULT_BACKUP = :pDataUlt, DATA_PROX_BACKUP = :pDataProx, CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
+        query.Query1.ParamByName('pDataUlt').AsDate := now;
+        query.Query1.ParamByName('pDataProx').AsDate := data_prox_backup;
+        query.Query1.ParamByName('pLocal').AsString := local_arquivo_backup;
+        query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+        query.Query1.ExecSQL;
+
+
+
+        exec_backup := false;
+      end
+      else
+      begin
+
+      end;
+
+
+  except
+
+
+  end;
+
+
+
+end;
 
 procedure dadosGlobais.listas;
 var

@@ -74,6 +74,7 @@ begin
       begin
         Sender.Canvas.Brush.Color := clWhite; // Cor para linhas ímpares
         sender.Canvas.Font.Size := 7;
+        sender.Canvas.Font.Color := clGray;
       end;
 
     if (item.Index >= lvRelatorioAnual.Items.Count - 2) then
@@ -457,7 +458,7 @@ begin
           end;
 
           with lvRelatorioAnual.Items.Add do begin
-            Caption := '';
+            Caption := 'Variação Mensal';
 
             for I := 1 to 12 do begin
               if mes_variacao[i] <> 0 then

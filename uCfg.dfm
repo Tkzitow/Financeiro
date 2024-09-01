@@ -110,9 +110,9 @@ object fml_cfg: Tfml_cfg
     end
     object GroupBox3: TGroupBox
       Left = 32
-      Top = 360
+      Top = 368
       Width = 153
-      Height = 121
+      Height = 113
       Caption = 'Inicio das atividades'
       TabOrder = 2
       object btn_cfg_ok: TButton
@@ -136,9 +136,9 @@ object fml_cfg: Tfml_cfg
     end
     object GroupBox4: TGroupBox
       Left = 191
-      Top = 382
-      Width = 282
-      Height = 99
+      Top = 368
+      Width = 266
+      Height = 113
       Caption = 'Relat'#243'rio Anual'
       TabOrder = 3
       object Label2: TLabel
@@ -175,6 +175,85 @@ object fml_cfg: Tfml_cfg
         TabOrder = 2
         Visible = False
         OnClick = p_btn_cfg_relatorio_anualClick
+      end
+    end
+    object Panel1: TPanel
+      Left = 479
+      Top = 383
+      Width = 185
+      Height = 75
+      Caption = 'Panel1'
+      TabOrder = 4
+      OnClick = Panel1Click
+    end
+    object GroupBox5: TGroupBox
+      Left = 359
+      Top = 15
+      Width = 305
+      Height = 210
+      Caption = 'Backup'
+      TabOrder = 5
+      object Label3: TLabel
+        Left = 16
+        Top = 27
+        Width = 78
+        Height = 15
+        Caption = #218'ltimo Backup'
+      end
+      object lDataProxBackup: TLabel
+        Left = 120
+        Top = 48
+        Width = 34
+        Height = 15
+        Caption = 'Label3'
+      end
+      object lDataUltBackup: TLabel
+        Left = 120
+        Top = 27
+        Width = 34
+        Height = 15
+        Caption = 'Label3'
+      end
+      object Label6: TLabel
+        Left = 16
+        Top = 48
+        Width = 87
+        Height = 15
+        Caption = 'Pr'#243'ximo Backup'
+      end
+      object lCaminhoBackup: TLabel
+        Left = 176
+        Top = 92
+        Width = 91
+        Height = 15
+        Caption = 'Caminho Backup'
+      end
+      object Panel2: TPanel
+        Left = 19
+        Top = 77
+        Width = 118
+        Height = 30
+        Caption = 'Local Backup'
+        TabOrder = 0
+        OnClick = Panel2Click
+      end
+      object Panel4: TPanel
+        Left = 19
+        Top = 161
+        Width = 118
+        Height = 30
+        Caption = 'Fazer Backup Agora'
+        TabOrder = 1
+        OnClick = Panel4Click
+      end
+      object Panel3: TPanel
+        Left = 19
+        Top = 125
+        Width = 118
+        Height = 30
+        Caption = 'Per'#237'odo p/ Salvar '
+        TabOrder = 2
+        OnClick = Panel3Click
       end
     end
   end

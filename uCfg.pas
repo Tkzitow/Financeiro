@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uDataModule, uDados,
-  Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uDataModule, uDados, DateUtils,
+  Vcl.ComCtrls, ShellAPI;
 
 type
   Tfml_cfg = class(TForm)
@@ -28,6 +28,16 @@ type
     r_valor: TRadioButton;
     Label2: TLabel;
     p_btn_cfg_relatorio_anual: TPanel;
+    Panel1: TPanel;
+    GroupBox5: TGroupBox;
+    Label3: TLabel;
+    lDataProxBackup: TLabel;
+    lDataUltBackup: TLabel;
+    Label6: TLabel;
+    Panel2: TPanel;
+    Panel4: TPanel;
+    lCaminhoBackup: TLabel;
+    Panel3: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure btn_adicionar_finalidadeClick(Sender: TObject);
     procedure btn_adicionar_itemClick(Sender: TObject);
@@ -42,11 +52,16 @@ type
     procedure r_porcentClick(Sender: TObject);
     procedure r_valorClick(Sender: TObject);
     procedure p_central_cfgClick(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
+    procedure Panel4Click(Sender: TObject);
+    procedure Panel2Click(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
     function validar_texto(texto : string): boolean;
+    procedure carregarInfTela;
 
   end;
 
@@ -76,7 +91,7 @@ begin
             ParamByName('pConta').AsString := texto;
             ParamByName('puser').AsInteger := id_usuarioLogado;
             ExecSQL();
-          end;      
+          end;
       end
       else
       begin
@@ -197,11 +212,11 @@ begin
       begin
         ShowMessage('Quantidade de letras precisa ser maior ou igual a 3 ou o texto contém caracteres especiais!');
       end;
-  
+
   except
     ShowMessage('Erro ao cadastrar ORIGEM!');
   end;
-  
+
 
   dados.listas;
 end;
@@ -222,13 +237,30 @@ begin
       begin
         ShowMessage('Gravação Cancelada!!!');
       end;
-    
+
   except
     ShowMessage('Erro ao adicionar Data de Inicio das Atividades');
   end;
 
   data_inicio := data_cfg_inicio.Date;
 end;
+
+procedure Tfml_cfg.carregarInfTela;
+begin
+
+    query.Query1.sql.Clear;
+    Query.Query1.sql.Add('select DATA_ULT_BACKUP, DATA_PROX_BACKUP, PERIODO_SALVAR_BACKUP from CONFIGURACAO where ID_USUARIO = :pUser');
+    Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    Query.Query1.Open();
+
+    periodo_salvar_backup := Query.Query1.FieldByName('PERIODO_SALVAR_BACKUP').AsInteger;
+    data_prox_backup := Query.Query1.FieldByName('DATA_PROX_BACKUP').AsDateTime;
+    data_ult_backup := Query.Query1.FieldByName('DATA_ULT_BACKUP').AsDateTime;
+
+    lDataUltBackup.Caption := formatdatetime('dd/mm/yyyy', data_ult_backup);
+    lDataProxBackup.Caption := formatdatetime('dd/mm/yyyy', data_prox_backup);
+
+  end;
 
 procedure Tfml_cfg.edt_mediaDiaria_planejadaChange(Sender: TObject);
 var
@@ -279,12 +311,84 @@ begin
   data_cfg_inicio.Date := data_inicio;
   l_mediDiaria_planejada_atual.Caption := formatFloat('#,##0.00', mediaDiaria_planejada);
 
+  carregarInfTela;
+
   case variacao_relatorio_anual of
     1 : r_porcent.Checked := true;
     2 : r_valor.Checked := true;
   end;
 
   p_btn_cfg_relatorio_anual.Visible := false;
+end;
+
+procedure Tfml_cfg.Panel1Click(Sender: TObject);
+var
+  teste : TDateTime;
+begin
+
+  carregarInfTela;
+
+
+
+
+end;
+
+procedure Tfml_cfg.Panel2Click(Sender: TObject);
+begin
+  with TFileOpenDialog.Create(nil) do
+    begin
+      Options := [fdoPickFolders];
+      if execute then
+        local_arquivo_backup := filename;
+
+
+
+      if Application.MessageBox('Salvar caminho do Backup?','', MB_YESNO) = mrYes then
+        begin
+          Query.Query1.sql.Clear;
+          Query.Query1.sql.Add('update CONFIGURACAO CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
+          Query.Query1.ParamByName('pLocal').AsString := local_arquivo_backup;
+          Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+          Query.Query1.ExecSQL;
+
+        end;
+
+
+    end;
+end;
+
+procedure Tfml_cfg.Panel3Click(Sender: TObject);
+begin
+  periodo_salvar_backup := strtoint(inputBox('Digite o número', 'Digite o número:' + #13 + '1 - Inicio do Mes' + #13 + '2 - Meio do Mês' + #13 + '3 - Final do Mês', ''));
+
+  if periodo_salvar_backup > 0 then
+    if Application.MessageBox('Salvar Informação', '', MB_YESNO) = mrYes  then
+      begin
+        Query.Query1.SQL.Clear;
+        query.Query1.SQL.Add('update CONFIGURACAO set PERIODO_SALVAR_BACKUP = :pPeriodo where ID_USUARIO = :pUser');
+        query.Query1.ParamByName('pPeriodo').AsInteger := periodo_salvar_backup;
+        query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+        query.Query1.ExecSQL;
+
+      end
+      else
+      begin
+
+      end;
+end;
+
+procedure Tfml_cfg.Panel4Click(Sender: TObject);
+begin
+  if Application.MessageBox('Fazer o BACKUP AGORA', '', MB_YESNO) = mrYes then
+    begin
+      exec_backup := true;
+      dados.backupBanco;
+    end
+    else
+    begin
+
+    end;
+
 end;
 
 procedure Tfml_cfg.p_btn_cfg_relatorio_anualClick(Sender: TObject);
@@ -330,7 +434,7 @@ begin
     letras := 'qwertyuiopasdfghjklçzxcvbnm';
     caracteres_invalido := '123456789!@#$%¨*()_+<>:?^`|*-´]~;.,\/';
     qtd_letra := 0;
-  
+
     for I := 1 to High(texto) do
       begin
         for x := 1 to High(letras) do
