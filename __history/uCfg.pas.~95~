@@ -31,8 +31,8 @@ type
     Panel1: TPanel;
     GroupBox5: TGroupBox;
     Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
+    lDataProxBackup: TLabel;
+    lDataUltBackup: TLabel;
     Label6: TLabel;
     Panel2: TPanel;
     Panel4: TPanel;
@@ -247,20 +247,20 @@ end;
 
 procedure Tfml_cfg.carregarInfTela;
 begin
-  try
-    query.Query1.SQL.Clear;
-    query.Query1.SQL.Add('select PERIODO_SALVAR_BACKUP from CONFIGURCAO where ID_USUARIO = :pUser');
-    query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
-    query.Query1.Open();
 
-    periodo_salvar_backup := query.Query1.FieldByName('PERIODO_SALVAR_BACKUP').AsInteger;
+    query.Query1.sql.Clear;
+    Query.Query1.sql.Add('select DATA_ULT_BACKUP, DATA_PROX_BACKUP, PERIODO_SALVAR_BACKUP from CONFIGURACAO where ID_USUARIO = :pUser');
+    Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    Query.Query1.Open();
 
+    periodo_salvar_backup := Query.Query1.FieldByName('PERIODO_SALVAR_BACKUP').AsInteger;
+    data_prox_backup := Query.Query1.FieldByName('DATA_PROX_BACKUP').AsDateTime;
+    data_ult_backup := Query.Query1.FieldByName('DATA_ULT_BACKUP').AsDateTime;
 
-  except
+    lDataUltBackup.Caption := formatdatetime('dd/mm/yyyy', data_ult_backup);
+    lDataProxBackup.Caption := formatdatetime('dd/mm/yyyy', data_prox_backup);
 
   end;
-
-end;
 
 procedure Tfml_cfg.edt_mediaDiaria_planejadaChange(Sender: TObject);
 var
@@ -326,10 +326,7 @@ var
   teste : TDateTime;
 begin
 
-  teste := EncodeDate(YearOf(now), 12, DaysInMonth(now));
-  teste := DaysInMonth(2);
-
-  ShowMessage(teste.ToString);
+  carregarInfTela;
 
 
 
@@ -349,7 +346,7 @@ begin
       if Application.MessageBox('Salvar caminho do Backup?','', MB_YESNO) = mrYes then
         begin
           Query.Query1.sql.Clear;
-          Query.Query1.sql.Add('update CONFIGURACAO CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
+          Query.Query1.sql.Add('update CONFIGURACAO set CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
           Query.Query1.ParamByName('pLocal').AsString := local_arquivo_backup;
           Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
           Query.Query1.ExecSQL;
@@ -362,10 +359,22 @@ end;
 
 procedure Tfml_cfg.Panel3Click(Sender: TObject);
 begin
-  periodo_salvar_backup := strtoint(inputBox('Digite o número:' + #13 + '1 - Inicio do Mes' + #13 + '2 - Meio do Mês' + #13 + '3 - Final do Mês', '', ''));
+  periodo_salvar_backup := strtoint(inputBox('Digite o número', 'Digite o número:' + #13 + '1 - Inicio do Mes' + #13 + '2 - Meio do Mês' + #13 + '3 - Final do Mês', ''));
 
-  if Application.MessageBox('Digite o número:' + #13 + '1 - Inicio do Mes' + #13 + '2 - Meio do Mês' + #13 + '3 - Final do Mês', '', MB_YESNO) = mrYes  then
+  if periodo_salvar_backup > 0 then
+    if Application.MessageBox('Salvar Informação', '', MB_YESNO) = mrYes  then
+      begin
+        Query.Query1.SQL.Clear;
+        query.Query1.SQL.Add('update CONFIGURACAO set PERIODO_SALVAR_BACKUP = :pPeriodo where ID_USUARIO = :pUser');
+        query.Query1.ParamByName('pPeriodo').AsInteger := periodo_salvar_backup;
+        query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+        query.Query1.ExecSQL;
 
+      end
+      else
+      begin
+
+      end;
 end;
 
 procedure Tfml_cfg.Panel4Click(Sender: TObject);

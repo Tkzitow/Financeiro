@@ -189,7 +189,7 @@ object fml_cfg: Tfml_cfg
     object GroupBox5: TGroupBox
       Left = 359
       Top = 15
-      Width = 305
+      Width = 186
       Height = 210
       Caption = 'Backup'
       TabOrder = 5
@@ -221,13 +221,6 @@ object fml_cfg: Tfml_cfg
         Height = 15
         Caption = 'Pr'#243'ximo Backup'
       end
-      object lCaminhoBackup: TLabel
-        Left = 176
-        Top = 92
-        Width = 91
-        Height = 15
-        Caption = 'Caminho Backup'
-      end
       object Panel2: TPanel
         Left = 19
         Top = 77
@@ -239,16 +232,24 @@ object fml_cfg: Tfml_cfg
       end
       object Panel4: TPanel
         Left = 19
-        Top = 161
+        Top = 160
         Width = 118
         Height = 30
         Caption = 'Fazer Backup Agora'
+        Color = clBackground
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 1
         OnClick = Panel4Click
       end
       object Panel3: TPanel
         Left = 19
-        Top = 125
+        Top = 118
         Width = 118
         Height = 30
         Caption = 'Per'#237'odo p/ Salvar '

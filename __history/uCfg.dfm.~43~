@@ -190,7 +190,7 @@ object fml_cfg: Tfml_cfg
       Left = 359
       Top = 15
       Width = 305
-      Height = 218
+      Height = 210
       Caption = 'Backup'
       TabOrder = 5
       object Label3: TLabel
@@ -200,14 +200,14 @@ object fml_cfg: Tfml_cfg
         Height = 15
         Caption = #218'ltimo Backup'
       end
-      object Label4: TLabel
+      object lDataProxBackup: TLabel
         Left = 120
         Top = 48
         Width = 34
         Height = 15
         Caption = 'Label3'
       end
-      object Label5: TLabel
+      object lDataUltBackup: TLabel
         Left = 120
         Top = 27
         Width = 34
@@ -235,23 +235,25 @@ object fml_cfg: Tfml_cfg
         Height = 30
         Caption = 'Local Backup'
         TabOrder = 0
-      end
-      object Panel3: TPanel
-        Left = 19
-        Top = 113
-        Width = 118
-        Height = 30
-        Caption = 'Definir dia p/ Backup'
-        TabOrder = 1
+        OnClick = Panel2Click
       end
       object Panel4: TPanel
         Left = 19
-        Top = 149
+        Top = 161
         Width = 118
         Height = 30
         Caption = 'Fazer Backup Agora'
-        TabOrder = 2
+        TabOrder = 1
         OnClick = Panel4Click
+      end
+      object Panel3: TPanel
+        Left = 19
+        Top = 125
+        Width = 118
+        Height = 30
+        Caption = 'Per'#237'odo p/ Salvar '
+        TabOrder = 2
+        OnClick = Panel3Click
       end
     end
   end

@@ -211,7 +211,6 @@ begin
       entrada_cadastro;
       btn_limpar_entrada.Click;
       ShowMessage(texto_insert_or_update);
-      edt_entrada_id.SetFocus;
     end
     else
     begin

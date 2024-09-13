@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, uDados,
-  uDataModule;
+  uDataModule, Vcl.Imaging.jpeg;
 
 type
   Tfml_saidas = class(TForm)
@@ -31,6 +31,8 @@ type
     Panel2: TPanel;
     edt_saida_id: TEdit;
     Label8: TLabel;
+    Panel3: TPanel;
+    Image1: TImage;
     procedure edt_qtdClick(Sender: TObject);
     procedure edt_valor_saidasClick(Sender: TObject);
     procedure edt_obs_saidasClick(Sender: TObject);
@@ -45,6 +47,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure edt_saida_idClick(Sender: TObject);
     procedure edt_saida_idKeyPress(Sender: TObject; var Key: Char);
+    procedure btn_buscar_id_saidaClick(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -76,6 +81,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses uBuscarIDSaida;
 
 procedure Tfml_saidas.adicionar_cb_saida;
 var
@@ -136,6 +143,24 @@ begin
   end;
 end;
 
+procedure Tfml_saidas.btn_buscar_id_saidaClick(Sender: TObject);
+var
+  open_form : TFmlRegistros2;
+begin
+  open_form := TFmlRegistros2.Create(nil);
+
+  open_form.ShowModal;
+  open_form.Destroy;
+
+  if validar_edicao_saida_id then
+    begin
+      edt_saida_id.Text := id_saida.ToString;
+      EditarRegistroSaida;
+    end;
+
+
+end;
+
 procedure Tfml_saidas.btn_cancelar_saidasClick(Sender: TObject);
 begin
   self.Close;
@@ -143,6 +168,7 @@ end;
 
 procedure Tfml_saidas.btn_limpar_saidasClick(Sender: TObject);
 begin
+  edt_saida_id.Enabled := true;
   cb_finalidade_saidas.Text := '';
   cb_item_saidas.Text := '';
   cb_conta_saidas.Text := '';
@@ -239,11 +265,13 @@ begin
               edt_obs_saidas.Text := obs_saida;
 
               validar_edicao_saida_id := true;
+              edt_saida_id.Enabled := false;
+              cb_finalidade_saidas.SetFocus;
             end
             else
             begin
               ShowMessage('O ID - ' + id_saida.ToString + ' não exister nos registros!');
-
+              edt_saida_id.SetFocus
             end;
 
           end;
@@ -254,11 +282,13 @@ begin
           ShowMessage('Campo ID inválido!');
         end;
 
+
       end
       else
       begin
         AtivarDesativarComponentesSaida;
 
+        edt_saida_id.Enabled := false;
         cb_finalidade_saidas.SetFocus;
       end;
 
@@ -325,33 +355,8 @@ begin
 end;
 
 procedure Tfml_saidas.edt_valor_saidasChange(Sender: TObject);
-var
-  i : integer;
-  n, v : string;
-  o : boolean;
 begin
-  //Mascara para edt_valor_entrada aceitar somente números e ,
-  n := '0123456789,';
-  v := edt_valor_saidas.Text;
-
-  if edt_valor_saidas.Text <> '' then
-    begin
-      for I := 1 to High(n) do
-        begin
-          if n[i] = v[high(v)] then
-            begin
-              o := true;
-            end;
-        end;
-
-     if not o then
-      begin
-        Delete(v, high(v), 1);
-      end;
-
-     edt_valor_saidas.Text := v;
-     edt_valor_saidas.SelStart := length(v);
-    end;
+  TratarEditValor(edt_valor_saidas);
 end;
 
 procedure Tfml_saidas.edt_valor_saidasClick(Sender: TObject);
@@ -380,6 +385,28 @@ end;
 procedure Tfml_saidas.FormShow(Sender: TObject);
 begin
   edt_saida_id.SetFocus;
+end;
+
+procedure Tfml_saidas.Image1Click(Sender: TObject);
+  var
+  open_form : TFmlRegistros2;
+begin
+  open_form := TFmlRegistros2.Create(nil);
+
+  open_form.ShowModal;
+  open_form.Destroy;
+
+  if validar_edicao_saida_id then
+    begin
+      edt_saida_id.Text := id_saida.ToString;
+      EditarRegistroSaida;
+    end;
+
+end;
+
+procedure Tfml_saidas.Panel1Click(Sender: TObject);
+begin
+  self.BringToFront;
 end;
 
 procedure Tfml_saidas.saida_cadastro;

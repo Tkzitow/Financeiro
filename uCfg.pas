@@ -36,7 +36,6 @@ type
     Label6: TLabel;
     Panel2: TPanel;
     Panel4: TPanel;
-    lCaminhoBackup: TLabel;
     Panel3: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure btn_adicionar_finalidadeClick(Sender: TObject);
@@ -346,7 +345,7 @@ begin
       if Application.MessageBox('Salvar caminho do Backup?','', MB_YESNO) = mrYes then
         begin
           Query.Query1.sql.Clear;
-          Query.Query1.sql.Add('update CONFIGURACAO CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
+          Query.Query1.sql.Add('update CONFIGURACAO set CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
           Query.Query1.ParamByName('pLocal').AsString := local_arquivo_backup;
           Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
           Query.Query1.ExecSQL;
@@ -358,6 +357,9 @@ begin
 end;
 
 procedure Tfml_cfg.Panel3Click(Sender: TObject);
+var
+  dia_para_backup : integer;
+  data : TDateTime;
 begin
   periodo_salvar_backup := strtoint(inputBox('Digite o número', 'Digite o número:' + #13 + '1 - Inicio do Mes' + #13 + '2 - Meio do Mês' + #13 + '3 - Final do Mês', ''));
 
@@ -365,11 +367,28 @@ begin
     if Application.MessageBox('Salvar Informação', '', MB_YESNO) = mrYes  then
       begin
         Query.Query1.SQL.Clear;
-        query.Query1.SQL.Add('update CONFIGURACAO set PERIODO_SALVAR_BACKUP = :pPeriodo where ID_USUARIO = :pUser');
+        query.Query1.SQL.Add('update CONFIGURACAO set PERIODO_SALVAR_BACKUP = :pPeriodo, DATA_PROX_BACKUP = :pData where ID_USUARIO = :pUser');
         query.Query1.ParamByName('pPeriodo').AsInteger := periodo_salvar_backup;
-        query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+
+            case periodo_salvar_backup of
+              0: dia_para_backup := DaysInMonth(Date);
+              1: dia_para_backup := 1;
+              2: dia_para_backup := (DaysInMonth(Date) div 2);
+              3: dia_para_backup := DaysInMonth(Date);
+            end;
+
+
+        if dia_para_backup < dayof(date) then
+          query.Query1.ParamByName('pData').AsDate := IncMonth(EncodeDate(yearOf(date), monthOf(date), dia_para_backup))
+        else
+          query.Query1.ParamByName('pData').AsDate := EncodeDate(yearOf(date), monthOf(date), dia_para_backup);
+
+        Query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
         query.Query1.ExecSQL;
 
+
+
+        carregarInfTela;
       end
       else
       begin

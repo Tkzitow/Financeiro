@@ -10,7 +10,7 @@ object fml_cfg: Tfml_cfg
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  Position = poScreenCenter
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   TextHeight = 15
@@ -189,8 +189,8 @@ object fml_cfg: Tfml_cfg
     object GroupBox5: TGroupBox
       Left = 359
       Top = 15
-      Width = 234
-      Height = 218
+      Width = 266
+      Height = 210
       Caption = 'Backup'
       TabOrder = 5
       object Label3: TLabel
@@ -200,14 +200,14 @@ object fml_cfg: Tfml_cfg
         Height = 15
         Caption = #218'ltimo Backup'
       end
-      object Label4: TLabel
+      object lDataProxBackup: TLabel
         Left = 120
         Top = 48
         Width = 34
         Height = 15
         Caption = 'Label3'
       end
-      object Label5: TLabel
+      object lDataUltBackup: TLabel
         Left = 120
         Top = 27
         Width = 34
@@ -221,29 +221,47 @@ object fml_cfg: Tfml_cfg
         Height = 15
         Caption = 'Pr'#243'ximo Backup'
       end
+      object lCaminhoBackup: TLabel
+        Left = 160
+        Top = 92
+        Width = 91
+        Height = 15
+        Caption = 'Caminho Backup'
+      end
       object Panel2: TPanel
         Left = 19
         Top = 77
-        Width = 126
+        Width = 118
         Height = 30
         Caption = 'Local Backup'
         TabOrder = 0
-      end
-      object Panel3: TPanel
-        Left = 19
-        Top = 113
-        Width = 126
-        Height = 30
-        Caption = 'Definir dia p/ Backup'
-        TabOrder = 1
+        OnClick = Panel2Click
       end
       object Panel4: TPanel
         Left = 19
-        Top = 149
-        Width = 126
+        Top = 160
+        Width = 118
         Height = 30
         Caption = 'Fazer Backup Agora'
+        Color = clBackground
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 1
+        OnClick = Panel4Click
+      end
+      object Panel3: TPanel
+        Left = 19
+        Top = 118
+        Width = 118
+        Height = 30
+        Caption = 'Per'#237'odo p/ Salvar '
         TabOrder = 2
+        OnClick = Panel3Click
       end
     end
   end

@@ -76,6 +76,7 @@ var
   obs_saida : string;
   validar_edicao_saida_id : boolean;
   ativar_desativar_componentes : boolean;
+  texto_insert_or_update : string;
 
 
 implementation
@@ -193,6 +194,8 @@ begin
     begin
       saida_cadastro;
       btn_limpar_saidas.Click;
+      ShowMessage(texto_insert_or_update);
+      edt_saida_id.SetFocus;
     end
     else
     begin
@@ -440,6 +443,8 @@ begin
         ParamByName('pObs').AsString := edt_obs_saidas.Text;
         ParamByName('pId').AsInteger := id_saida;
         ExecSQL;
+
+        texto_insert_or_update := 'A saída ' + id_saida.ToString + ' foi editada com sucesso!!';
       end
       else
       begin
@@ -461,6 +466,18 @@ begin
         ParamByName('pObs').AsString := edt_obs_saidas.Text;
         ParamByName('pUser').AsInteger := id_usuarioLogado;
         ExecSQL;
+
+
+        sql.Clear;
+        sql.Add('select ID_SAIDA from SAIDAS where ID_USUARIO = :pUser order by ID_SAIDA desc limit 0,1');
+        ParamByName('pUser').AsInteger := id_usuarioLogado;
+        open;
+
+        id_saida := FieldByName('ID_SAIDA').AsInteger;
+
+
+        texto_insert_or_update := 'A saída ' + id_saida.ToString + ' foi registrada com sucesso!!';
+
       end;
 
     end;

@@ -62,6 +62,15 @@ type
     procedure pRelatorioAnualClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure pRelatorioEntradaSaidaClick(Sender: TObject);
+    procedure pRelatorioEntradaSaidaMouseLeave(Sender: TObject);
+    procedure pRelatorioEntradaSaidaMouseMove(Sender: TObject;
+      Shift: TShiftState; X, Y: Integer);
+    procedure pRelatorioBuscaMouseLeave(Sender: TObject);
+    procedure pRelatorioBuscaMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure pRelatorioAnualMouseLeave(Sender: TObject);
+    procedure pRelatorioAnualMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
 
@@ -314,8 +323,6 @@ begin
   if open_anual then
     begin
       pRelatorioAnual.Font.Color := clBlack;
-      pRelatorioAnual.Font.Style := [];
-      pRelatorioAnual.Font.Size := 9;
       pRelatorioAnual.BevelOuter := bvRaised;
       open_anual := false;
       Action := caFree;
@@ -328,8 +335,6 @@ begin
   if open_busca then
     begin
       pRelatorioBusca.Font.Color := clBlack;
-      pRelatorioBusca.Font.Style := [];
-      pRelatorioBusca.Font.Size := 9;
       pRelatorioBusca.BevelOuter := bvRaised;
       open_busca := false;
       Action := caFree;
@@ -342,8 +347,6 @@ begin
   if open_SaidaEntrada then
     begin
       pRelatorioEntradaSaida.Font.Color := clBlack;
-      pRelatorioEntradaSaida.Font.Style := [];
-      pRelatorioEntradaSaida.Font.Size := 9;
       pRelatorioEntradaSaida.BevelOuter := bvRaised;
       open_SaidaEntrada := false;
       Action := caFree;
@@ -389,8 +392,6 @@ begin
   if not open_busca then
     begin
       pRelatorioBusca.Font.Color := clBlue;
-      pRelatorioBusca.Font.Style := [fsbold];
-      pRelatorioBusca.Font.Size := 10;
       pRelatorioBusca.BevelOuter := bvLowered;
 
       openForm := TFmlRegistros.Create(nil);
@@ -404,6 +405,25 @@ begin
 
 end;
 
+procedure Tfml_main.pRelatorioBuscaMouseLeave(Sender: TObject);
+begin
+  if not open_busca then
+    begin
+      pRelatorioBusca.Font.Color := clblack;
+      pRelatorioBusca.Font.Size := 9;
+    end;
+end;
+
+procedure Tfml_main.pRelatorioBuscaMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if not open_busca then
+      begin
+        pRelatorioBusca.Font.Color := clblue;
+        pRelatorioBusca.Font.Size := 9;
+      end;
+end;
+
 procedure Tfml_main.pRelatorioEntradaSaidaClick(Sender: TObject);
 var
   openForm : Tfml_relatorio;
@@ -411,8 +431,6 @@ begin
   if not open_SaidaEntrada then
       begin
         pRelatorioEntradaSaida.Font.Color := clBlue;
-        pRelatorioEntradaSaida.Font.Style := [fsbold];
-        pRelatorioEntradaSaida.Font.Size := 10;
         pRelatorioEntradaSaida.BevelOuter := bvLowered;
 
         openForm := Tfml_relatorio.Create(Owner);
@@ -425,19 +443,32 @@ begin
 
 end;
 
+procedure Tfml_main.pRelatorioEntradaSaidaMouseLeave(Sender: TObject);
+begin
+  if not open_SaidaEntrada then
+    begin
+      pRelatorioEntradaSaida.Font.Color := clBlack;
+      pRelatorioEntradaSaida.Font.Size := 9;
+    end;
+end;
+
+procedure Tfml_main.pRelatorioEntradaSaidaMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if not open_SaidaEntrada then
+    begin
+      pRelatorioEntradaSaida.Font.Color := clblue;
+      pRelatorioEntradaSaida.Font.Size := 9;
+    end;
+end;
+
 procedure Tfml_main.pRelatorioAnualClick(Sender: TObject);
 var
   openForm : TfmlRelatorioAnual;
 begin
-  openForm := TfmlRelatorioAnual.Create(nil);
-  openForm.Parent := p_central;
-  openForm.Show;
-
   if not open_anual then
     begin
       pRelatorioAnual.Font.Color := clBlue;
-      pRelatorioAnual.Font.Style := [fsbold];
-      pRelatorioAnual.Font.Size := 10;
       pRelatorioAnual.BevelOuter := bvLowered;
 
       openForm := TfmlRelatorioAnual.Create(Owner);
@@ -448,6 +479,25 @@ begin
       open_anual := true;
     end;
 
+end;
+
+procedure Tfml_main.pRelatorioAnualMouseLeave(Sender: TObject);
+begin
+  if not open_anual then
+    begin
+      pRelatorioAnual.Font.Color := clblack;
+      pRelatorioAnual.Font.Size := 9;
+    end;
+end;
+
+procedure Tfml_main.pRelatorioAnualMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    if not open_anual then
+      begin
+        pRelatorioAnual.Font.Color := clblue ;
+        pRelatorioAnual.Font.Size := 9;
+      end;
 end;
 
 procedure Tfml_main.p_sairClick(Sender: TObject);

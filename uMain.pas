@@ -217,6 +217,7 @@ begin
   dias_corridos := strtoint(FormatDateTime('dd', now));
   dias_qtd_mes := DaysInMonth(now);
 
+  dados.backupBanco;
 
   //Validando para que os dias restantes seja diferente de 0
   if (dias_qtd_mes - dias_corridos) = 0 then
@@ -587,7 +588,7 @@ begin
         p_cadastro_entradas.Font.Size := 10;
         p_cadastro_entradas.BevelOuter := bvLowered;
 
-        openForm := Tfml_entradas.Create(Owner);
+        openForm := Tfml_entradas.Create(nil);
         openForm.Parent := p_central;
         openForm.OnClose := close_entrada;
         openForm.Show;

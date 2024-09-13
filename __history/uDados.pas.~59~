@@ -23,6 +23,7 @@ var
   data_ult_backup : TDateTime;
   data_prox_backup : TDateTime;
   exec_backup : boolean;
+  periodo_salvar_backup : integer;
 
   local_arquivo_backup : string;
   nome_backup : string;
@@ -55,14 +56,17 @@ procedure dadosGlobais.backupBanco;
 var
   mysqldump : string;
   query : TDataModule1;
+  dia_para_backup : integer;
 begin
   try
+
+    local_arquivo_backup := '';
 
     query := TDataModule1.Create(nil);
 
 
     query.Query1.SQL.Clear;
-    query.Query1.SQL.Add('select CAMINHO_BACKUP, DATA_ULT_BACKUP, DATA_PROX_BACKUP from CONFIGURACAO where ID_USUARIO = :pUser');
+    query.Query1.SQL.Add('select CAMINHO_BACKUP, DATA_ULT_BACKUP, DATA_PROX_BACKUP, PERIODO_SALVAR_BACKUP from CONFIGURACAO where ID_USUARIO = :pUser');
     query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
     query.Query1.Open();
 
@@ -70,23 +74,28 @@ begin
     local_arquivo_backup := query.Query1.FieldByName('CAMINHO_BACKUP').AsString;
     data_prox_backup := query.Query1.FieldByName('DATA_PROX_BACKUP').AsDateTime;
     data_ult_backup := query.Query1.FieldByName('DATA_ULT_BACKUP').AsDateTime;
+    dia_para_backup := query.Query1.FieldByName('PERIODO_SALVAR_BACKUP').AsInteger;
 
+    case dia_para_backup of
+      0 : dia_para_backup := DaysInMonth(date);
+      1 : dia_para_backup := 1;
+      2 : dia_para_backup := (DaysInMonth(date) div 2);
+      3 : dia_para_backup := DaysInMonth(date);
+    end;
 
     if (data_prox_backup < now) or (exec_backup) then
       begin
         nome_backup := '\backup_dofs_' + nome_usuarioLogado + '_' + formatdatetime('ddmmyyyy', now) + '.sql';
 
-
-
-        with TFileOpenDialog.Create(nil) do
+        if local_arquivo_backup.IsEmpty then
           begin
-            Options := [fdoPickFolders];
-            if execute then
-              local_arquivo_backup := filename;
-
+            with TFileOpenDialog.Create(nil) do
+              begin
+                Options := [fdoPickFolders];
+                if execute then
+                  local_arquivo_backup := filename;
+              end;
           end;
-
-
 
         mysqldump := Format('cmd.exe /C mysqldump -u %s -p%s -h %s %s > "%s"',
           ['root', '123456', 'localhost', 'dofs', local_arquivo_backup + nome_backup]);
@@ -94,18 +103,18 @@ begin
         ShellExecute(0, 'open', 'cmd.exe', Pchar(mysqldump), nil, ABS_AUTOHIDE);
 
 
-
-
-        if (formatdatetime('mm', data_prox_backup).ToInteger = 12) and (formatdatetime('mm', now).ToInteger = 12)  then
-          data_prox_backup := EncodeDate(YearOf(data_prox_backup) + 1, 01, DaysInMonth(data_prox_backup) )
-        else if (formatdatetime('mm', data_prox_backup).ToInteger = formatdatetime('mm', now).ToInteger) then
-          data_prox_backup := EncodeDate(YearOf(data_prox_backup), MonthOf(data_prox_backup) + 1, DaysInMonth(data_prox_backup));
+        if data_prox_backup <= now then
+          begin
+            data_prox_backup := EncodeDate(yearOf(date), monthOf(date), dia_para_backup);
+            data_prox_backup := IncMonth(now);
+          end;
 
 
         query.Query1.SQL.Clear;
-        query.Query1.SQL.Add('update CONFIGURACAO set DATA_ULT_BACKUP = :pDataUlt, DATA_PROX_BACKUP = :pDataProx where ID_USUARIO = :pUser');
+        query.Query1.SQL.Add('update CONFIGURACAO set DATA_ULT_BACKUP = :pDataUlt, DATA_PROX_BACKUP = :pDataProx, CAMINHO_BACKUP = :pLocal where ID_USUARIO = :pUser');
         query.Query1.ParamByName('pDataUlt').AsDate := now;
         query.Query1.ParamByName('pDataProx').AsDate := data_prox_backup;
+        query.Query1.ParamByName('pLocal').AsString := local_arquivo_backup;
         query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
         query.Query1.ExecSQL;
 

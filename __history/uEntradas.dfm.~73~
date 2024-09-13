@@ -1,6 +1,6 @@
 object fml_entradas: Tfml_entradas
-  Left = 289
-  Top = 69
+  Left = 153
+  Top = 17
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Cadastro de Entradas'
