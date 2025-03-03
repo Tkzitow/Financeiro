@@ -1,0 +1,67 @@
+unit uInvestimentos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  Tfml_investimentos = class(TForm)
+    p_investimentos_main: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    ComboBox2: TComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    ComboBox3: TComboBox;
+    Edit3: TEdit;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    Button1: TButton;
+    Button2: TButton;
+    ListView1: TListView;
+    Panel9: TPanel;
+    Button3: TButton;
+    Button4: TButton;
+    Label7: TLabel;
+    Panel10: TPanel;
+    ListView2: TListView;
+    Panel14: TPanel;
+    Panel3: TPanel;
+    Panel15: TPanel;
+    Panel16: TPanel;
+    Panel17: TPanel;
+    Panel18: TPanel;
+    Panel4: TPanel;
+    Panel11: TPanel;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    Button5: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fml_investimentos: Tfml_investimentos;
+
+implementation
+
+{$R *.dfm}
+
+end.

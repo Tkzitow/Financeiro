@@ -1,0 +1,735 @@
+﻿unit uMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uEntradas, uSaidas, uComparativo,
+  uRelatorio, uDataModule, uCfg, Vcl.ComCtrls, uDados, DateUtils, Vcl.Imaging.jpeg,
+  uLogin, uRegistros, uRelatorioAnual;
+
+type
+  Tfml_main = class(TForm)
+    p_Main_central: TPanel;
+    p_left: TPanel;
+    p_central: TPanel;
+    StatusBar1: TStatusBar;
+    p_investimentos: TPanel;
+    p_cadastro_entradas: TPanel;
+    p_cadastros_saidas: TPanel;
+    p_relatorios: TPanel;
+    p_comparativos: TPanel;
+    p_configuracao: TPanel;
+    p_sair: TPanel;
+    pRelatorioBusca: TPanel;
+    pRelatorioAnual: TPanel;
+    pRelatorioEntradaSaida: TPanel;
+    procedure btn_cadastro_entradasClick(Sender: TObject);
+    procedure btn_cadastros_saidasClick(Sender: TObject);
+    procedure btn_relatoriosClick(Sender: TObject);
+    procedure btn_cfgClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btn_comparativosClick(Sender: TObject);
+    procedure p_cadastro_entradasClick(Sender: TObject);
+    procedure p_cadastros_saidasClick(Sender: TObject);
+    procedure p_relatoriosClick(Sender: TObject);
+    procedure p_comparativosClick(Sender: TObject);
+    procedure p_configuracaoClick(Sender: TObject);
+    procedure p_configuracaoMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure p_configuracaoMouseLeave(Sender: TObject);
+    procedure p_comparativosMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure p_comparativosMouseLeave(Sender: TObject);
+    procedure p_relatoriosMouseLeave(Sender: TObject);
+    procedure p_relatoriosMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure p_investimentosMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure p_investimentosMouseLeave(Sender: TObject);
+    procedure p_cadastros_saidasMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure p_cadastros_saidasMouseLeave(Sender: TObject);
+    procedure p_cadastro_entradasMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure p_cadastro_entradasMouseLeave(Sender: TObject);
+    procedure p_sairClick(Sender: TObject);
+    procedure p_sairMouseLeave(Sender: TObject);
+    procedure p_sairMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure pRelatorioBuscaClick(Sender: TObject);
+    procedure pRelatorioAnualClick(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
+    procedure pRelatorioEntradaSaidaClick(Sender: TObject);
+  private
+    { Private declarations }
+
+    FIgnoreMouseLeave : boolean;
+  public
+    { Public declarations }
+    function  media_diaria: double;
+
+    procedure telas;
+    procedure informacoes_gerais;
+    procedure close_entrada(Sender: TObject; var Action : TCloseAction);
+    procedure close_saida(Sender: TObject; var Action : TCloseAction);
+    procedure close_relatorio(Sender: TObject; var Action : TCloseAction);
+    procedure close_comparativo(Sender: TObject; var Action : TCloseAction);
+    procedure close_investimento(Sender: TObject; var Action : TCloseAction);
+    procedure close_configuracao(sender: TObject; var Action : TCloseAction);
+    procedure close_relatorioSaidaEntrada(sender: TObject; var Action : TCloseAction);
+    procedure close_relatorioBusca(sender: TObject; var Action : TCloseAction);
+    procedure close_relatorioAnual(sender: TObject; var Action : TCloseAction);
+
+
+
+
+
+    procedure teste(sender: TObject);
+
+  end;
+
+var
+  fml_main: Tfml_main;
+  Query : TDataModule1;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfml_main.btn_comparativosClick(Sender: TObject);
+var
+  openForm : Tfml_comparativo;
+begin
+  try
+    if not open_comparativo then
+      begin
+        openForm := Tfml_comparativo.Create(Owner);
+        openForm.Parent := p_central;
+        openForm.Show;
+
+        open_comparativo := true;
+      end;
+  except
+    ShowMessage('Erro ao abrir tela de COMPARATIVO!');
+  end;
+
+end;
+
+procedure Tfml_main.btn_relatoriosClick(Sender: TObject);
+var
+  openForm : Tfml_relatorio;
+begin
+  try
+    if not open_relatorio then
+      begin
+        openForm := Tfml_relatorio.Create(Owner);
+        openForm.Parent := p_central;
+        openform.Show;
+
+        open_relatorio := true;
+      end;
+  except
+    ShowMessage('Erro ao abrir tela de RELATÓRIOS!')
+  end;
+
+end;
+
+
+procedure Tfml_main.btn_cadastros_saidasClick(Sender: TObject);
+var
+  openForm : Tfml_saidas;
+begin
+  try
+    if not open_saidas then
+      begin
+        openForm := Tfml_saidas.Create(nil);
+        openForm.Parent := p_central;
+        openForm.Show;
+
+        open_saidas := true;
+      end;
+  except
+    ShowMessage('Erro ao abrir tela de SAÌDAS!');
+  end;
+
+end;
+
+procedure Tfml_main.btn_cadastro_entradasClick(Sender: TObject);
+var
+  openForm : Tfml_entradas;
+begin
+  try
+    if not open_entradas then
+      begin
+        openForm := Tfml_entradas.Create(Owner);
+        openForm.Parent := p_central;
+        openForm.Show;
+
+        open_entradas := true;
+
+      end;
+
+  except
+    ShowMessage('Erro ao abrir tela de ENTRADAS!');
+  end;
+
+
+end;
+
+procedure Tfml_main.btn_cfgClick(Sender: TObject);
+var
+  openForm : Tfml_cfg;
+begin
+  openForm := Tfml_cfg.Create(nil);
+  openForm.Parent := p_central;
+  openForm.Show;
+end;
+
+procedure Tfml_main.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Query.Destroy;
+end;
+
+procedure Tfml_main.FormCreate(Sender: TObject);
+var
+  openLogin : Tfml_login;
+begin
+  Query := TDataModule1.Create(nil);
+  openLogin := Tfml_login.Create(nil);
+
+  openLogin.ShowModal;
+
+  dados.listas;
+  telas;
+  informacoes_gerais;
+
+  dias_corridos := strtoint(FormatDateTime('dd', now));
+  dias_qtd_mes := DaysInMonth(now);
+
+
+  //Validando para que os dias restantes seja diferente de 0
+  if (dias_qtd_mes - dias_corridos) = 0 then
+    begin
+      dias_restantes := 1;
+    end
+    else
+    begin
+      dias_restantes :=  dias_qtd_mes - dias_corridos;
+    end;
+
+  media_diaria;
+
+  StatusBar1.Panels[0].Text := '    Usuário:    ' + UpperCase(nome_usuarioLogado);
+  StatusBar1.Panels[1].Text := formatdatetime('dd/mm/yyyy', now);
+  StatusBar1.Panels[2].Text := 'Dias Corridos:  ' + dias_corridos.ToString;
+  StatusBar1.Panels[3].Text := 'Dias Restantes:  ' + dias_restantes.ToString;
+end;
+
+
+procedure Tfml_main.informacoes_gerais;
+begin
+  try
+    query.Query1.SQL.Clear;
+    query.Query1.SQL.Add('select DATA_INICIO as data, VARIACAO_RELATORIO_ANUAL as variacao from CONFIGURACAO where ID_USUARIO = :pUser');
+    query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    query.Query1.Open();
+
+    data_inicio := query.Query1.FieldByName('data').AsDateTime;
+    variacao_relatorio_anual := query.Query1.FieldByName('variacao').AsInteger;
+
+  except
+    ShowMessage('Erro ao rodar processo de INFORMAÇÕES GERAIS');
+  end;
+end;
+
+procedure Tfml_main.close_comparativo(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  if open_comparativo then
+    begin
+      p_comparativos.Font.Color := clBlack;
+      p_comparativos.Font.Style := [];
+      p_comparativos.Font.Size := 9;
+      p_comparativos.BevelOuter := bvRaised;
+      open_comparativo := false;
+      Action := caFree;
+    end;
+end;
+
+procedure Tfml_main.close_configuracao(sender: TObject;
+  var Action: TCloseAction);
+begin
+  if open_configuracao then
+    begin
+      p_configuracao.Font.Color := clBlack;
+      p_configuracao.Font.Style := [];
+      p_configuracao.Font.Size := 9;
+      p_configuracao.BevelOuter := bvRaised;
+      open_configuracao := false;
+      Action := caFree;
+    end;
+
+
+end;
+
+procedure Tfml_main.close_entrada(Sender: TObject; var Action: TCloseAction);
+begin
+
+  if open_entradas then
+    begin
+      p_cadastro_entradas.Font.Color := clBlack;
+      p_cadastro_entradas.Font.Style := [];
+      p_cadastro_entradas.Font.Size := 9;
+      p_cadastro_entradas.BevelOuter := bvRaised;
+      open_entradas := false;
+      Action := caFree;
+    end;
+
+end;
+
+procedure Tfml_main.close_investimento(Sender: TObject;
+  var Action: TCloseAction);
+begin
+
+end;
+
+procedure Tfml_main.close_relatorio(Sender: TObject; var Action: TCloseAction);
+begin
+  if open_relatorio then
+    begin
+      p_relatorios.Font.Color := clBlack;
+      p_relatorios.Font.Style := [];
+      p_relatorios.Font.Size := 9;
+      p_relatorios.BevelOuter := bvRaised;
+      open_relatorio := false;
+      Action := caFree;
+    end;
+end;
+
+procedure Tfml_main.close_relatorioAnual(sender: TObject;
+  var Action: TCloseAction);
+begin
+  if open_anual then
+    begin
+      pRelatorioAnual.Font.Color := clBlack;
+      pRelatorioAnual.BevelOuter := bvRaised;
+      open_anual := false;
+      Action := caFree;
+    end;
+end;
+
+procedure Tfml_main.close_relatorioBusca(sender: TObject;
+  var Action: TCloseAction);
+begin
+  if open_busca then
+    begin
+      pRelatorioBusca.Font.Color := clBlack;
+      pRelatorioBusca.BevelOuter := bvRaised;
+      open_busca := false;
+      Action := caFree;
+    end;
+end;
+
+procedure Tfml_main.close_relatorioSaidaEntrada(sender: TObject;
+  var Action: TCloseAction);
+begin
+  if open_SaidaEntrada then
+    begin
+      pRelatorioEntradaSaida.Font.Color := clBlack;
+      pRelatorioEntradaSaida.BevelOuter := bvRaised;
+      open_SaidaEntrada := false;
+      Action := caFree;
+    end;
+end;
+
+procedure Tfml_main.close_saida(Sender: TObject; var Action: TCloseAction);
+begin
+  if open_saidas then
+    begin
+      p_cadastros_saidas.Font.Color := clBlack;
+      p_cadastros_saidas.Font.Style := [];
+      p_cadastros_saidas.Font.Size := 9;
+      p_cadastros_saidas.BevelOuter := bvRaised;
+      open_saidas := false;
+      Action := caFree;
+    end;
+end;
+
+function Tfml_main.media_diaria: double;
+begin
+  try
+    query.Query1.SQL.clear;
+    query.Query1.SQL.Add('select MEDIA_DIARIA_PLANEJADA as media from configuracao where ID_USUARIO = :pUser');
+    query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    query.Query1.Open();
+
+    mediaDiaria_planejada := query.Query1.FieldByName('media').AsFloat;
+  finally
+
+  end;
+end;
+
+procedure Tfml_main.Panel1Click(Sender: TObject);
+begin
+  p_investimentos.Visible := true;
+end;
+
+procedure Tfml_main.pRelatorioBuscaClick(Sender: TObject);
+var
+  openForm : TFmlRegistros;
+begin
+  if not open_busca then
+    begin
+      pRelatorioBusca.Font.Color := clBlue;
+      pRelatorioBusca.BevelOuter := bvLowered;
+
+      openForm := TFmlRegistros.Create(nil);
+      openForm.Parent := p_central;
+      openForm.OnClose := close_relatorioBusca;
+      openForm.Show;
+
+      open_busca := true;
+    end;
+
+
+end;
+
+procedure Tfml_main.pRelatorioEntradaSaidaClick(Sender: TObject);
+var
+  openForm : Tfml_relatorio;
+begin
+  if not open_SaidaEntrada then
+      begin
+        pRelatorioEntradaSaida.Font.Color := clBlue;
+        pRelatorioEntradaSaida.BevelOuter := bvLowered;
+
+        openForm := Tfml_relatorio.Create(Owner);
+        openForm.Parent := p_central;
+        openForm.OnClose := close_relatorioSaidaEntrada;
+        openform.Show;
+
+        open_SaidaEntrada := true;
+      end;
+
+end;
+
+procedure Tfml_main.pRelatorioAnualClick(Sender: TObject);
+var
+  openForm : TfmlRelatorioAnual;
+begin
+  if not open_anual then
+    begin
+      pRelatorioAnual.Font.Color := clBlue;
+      pRelatorioAnual.BevelOuter := bvLowered;
+
+      openForm := TfmlRelatorioAnual.Create(Owner);
+      openForm.Parent := p_central;
+      openForm.OnClose := close_relatorioAnual;
+      openform.Show;
+
+      open_anual := true;
+    end;
+
+end;
+
+procedure Tfml_main.p_sairClick(Sender: TObject);
+begin
+  halt
+end;
+
+procedure Tfml_main.p_sairMouseLeave(Sender: TObject);
+begin
+  p_sair.Color := clmaroon;
+end;
+
+procedure Tfml_main.p_sairMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  p_sair.Color := clred;
+end;
+
+procedure Tfml_main.p_investimentosMouseLeave(Sender: TObject);
+begin
+  p_investimentos.Font.Color := clBlack;
+  p_investimentos.Font.Style := [];
+  p_investimentos.Font.Size := 9;
+end;
+
+procedure Tfml_main.p_investimentosMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  p_investimentos.Font.Color := clBlue;
+  p_investimentos.Font.Style := [fsbold];
+  p_investimentos.Font.Size := 10;
+end;
+
+procedure Tfml_main.p_cadastros_saidasClick(Sender: TObject);
+var
+  openForm : Tfml_saidas;
+begin
+  try
+    if not open_saidas then
+      begin
+        p_cadastros_saidas.Font.Color := clBlue;
+        p_cadastros_saidas.Font.Style := [fsbold];
+        p_cadastros_saidas.Font.Size := 10;
+        p_cadastros_saidas.BevelOuter := bvLowered;
+
+        openForm := Tfml_saidas.Create(nil);
+        openForm.Parent := p_central;
+        openForm.OnClose := close_saida;
+        openForm.Show;
+
+        open_saidas := true;
+      end;
+  except
+    ShowMessage('Erro ao abrir tela de SAÌDAS!');
+  end;
+
+end;
+
+procedure Tfml_main.p_cadastros_saidasMouseLeave(Sender: TObject);
+begin
+  if not open_saidas then
+  begin
+    p_cadastros_saidas.Font.Color := clBlack;
+    p_cadastros_saidas.Font.Style := [];
+    p_cadastros_saidas.Font.Size := 9;
+  end;
+
+end;
+
+procedure Tfml_main.p_cadastros_saidasMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  p_cadastros_saidas.Font.Color := clBlue;
+  p_cadastros_saidas.Font.Style := [fsbold];
+  p_cadastros_saidas.Font.Size := 10;
+end;
+
+procedure Tfml_main.p_cadastro_entradasClick(Sender: TObject);
+var
+  openForm : Tfml_entradas;
+begin
+  try
+    if not open_entradas then
+      begin
+        p_cadastro_entradas.Font.Color := clBlue;
+        p_cadastro_entradas.Font.Style := [fsbold];
+        p_cadastro_entradas.Font.Size := 10;
+        p_cadastro_entradas.BevelOuter := bvLowered;
+
+        openForm := Tfml_entradas.Create(Owner);
+        openForm.Parent := p_central;
+        openForm.OnClose := close_entrada;
+        openForm.Show;
+
+        open_entradas := true;
+
+      end;
+
+  except
+    ShowMessage('Erro ao abrir tela de ENTRADAS!');
+  end;
+
+end;
+
+procedure Tfml_main.p_cadastro_entradasMouseLeave(Sender: TObject);
+begin
+
+  if not open_entradas then
+    begin
+      p_cadastro_entradas.Font.Color := clBlack;
+      p_cadastro_entradas.Font.Style := [];
+      p_cadastro_entradas.Font.Size := 9;
+    end;
+end;
+
+procedure Tfml_main.p_cadastro_entradasMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  p_cadastro_entradas.Font.Color := clBlue;
+  p_cadastro_entradas.Font.Style := [fsbold];
+  p_cadastro_entradas.Font.Size := 10;
+end;
+
+procedure Tfml_main.p_comparativosClick(Sender: TObject);
+var
+  openForm : Tfml_comparativo;
+begin
+  try
+    if not open_comparativo then
+      begin
+        p_comparativos.Font.Color := clBlue;
+        p_comparativos.Font.Style := [fsbold];
+        p_comparativos.Font.Size := 10;
+        p_comparativos.BevelOuter := bvLowered;
+
+        openForm := Tfml_comparativo.Create(Owner);
+        openForm.Parent := p_central;
+        openForm.OnClose := close_comparativo;
+        openForm.Show;
+
+        open_comparativo := true;
+      end;
+  except
+    ShowMessage('Erro ao abrir tela de COMPARATIVO!');
+  end;
+
+end;
+
+procedure Tfml_main.p_comparativosMouseLeave(Sender: TObject);
+begin
+  if not open_comparativo then
+    begin
+      p_comparativos.Font.Color := clBlack;
+      p_comparativos.Font.Style := [];
+      p_comparativos.Font.Size := 9;
+    end;
+
+end;
+
+procedure Tfml_main.p_comparativosMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  p_comparativos.Font.Color := clBlue;
+  p_comparativos.Font.Style := [fsbold];
+  p_comparativos.Font.Size := 10;
+end;
+
+procedure Tfml_main.p_configuracaoClick(Sender: TObject);
+var
+  openForm : Tfml_cfg;
+begin
+try
+  if not open_configuracao then
+    begin
+      p_configuracao.Font.Color := clBlue;
+      p_configuracao.Font.Style := [fsbold];
+      p_configuracao.Font.Size := 10;
+      p_configuracao.BevelOuter := bvLowered;
+
+      openForm := Tfml_cfg.Create(Owner);
+      openForm.Parent := p_central;
+      openForm.OnClose := close_configuracao;
+      openform.Show;
+
+      open_configuracao := true;
+    end;
+except
+
+end;
+end;
+
+procedure Tfml_main.p_configuracaoMouseLeave(Sender: TObject);
+begin
+  if not open_configuracao then
+    begin
+      p_configuracao.Font.Color := clBlack;
+      p_configuracao.Font.Style := [];
+      p_configuracao.Font.Size := 9;
+    end;
+
+
+end;
+
+procedure Tfml_main.p_configuracaoMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  p_configuracao.Font.Color := clBlue;
+  p_configuracao.Font.Style := [fsbold];
+  p_configuracao.Font.Size := 10;
+end;
+
+procedure Tfml_main.p_relatoriosClick(Sender: TObject);
+var
+  openForm : Tfml_relatorio;
+begin
+  try
+//    if not open_relatorio then
+//      begin
+//        p_relatorios.Font.Color := clBlue;
+//        p_relatorios.Font.Style := [fsbold];
+//        p_relatorios.Font.Size := 10;
+//        p_relatorios.BevelOuter := bvLowered;
+//
+//        openForm := Tfml_relatorio.Create(Owner);
+//        openForm.Parent := p_central;
+//        openForm.OnClose := close_relatorio;
+//        openform.Show;
+//
+//        open_relatorio := true;
+//      end;
+
+   if pRelatorioBusca.Visible then
+    begin
+      pRelatoriobusca.Visible := false;
+      pRelatorioAnual.Visible := false;
+      pRelatorioEntradaSaida.Visible := false;
+    end
+    else
+    begin
+      pRelatoriobusca.Visible := true;
+      pRelatorioAnual.Visible := true;
+      pRelatorioEntradaSaida.Visible := true;
+    end;
+
+  except
+    ShowMessage('Erro ao abrir tela de RELATÓRIOS!')
+  end;
+
+end;
+
+procedure Tfml_main.p_relatoriosMouseLeave(Sender: TObject);
+begin
+  if not open_relatorio then
+    begin
+      p_relatorios.Font.Color := clBlack;
+      p_relatorios.Font.Style := [];
+      p_relatorios.Font.Size := 9;
+    end;
+
+
+end;
+
+procedure Tfml_main.p_relatoriosMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  p_relatorios.Font.Color := clBlue;
+  p_relatorios.Font.Style := [fsbold];
+  p_relatorios.Font.Size := 10;
+
+
+end;
+
+procedure Tfml_main.telas;
+var
+  validacao : string;
+begin
+  try
+    query.Query1.SQL.Clear;
+    query.Query1.SQL.Add('select TELA_INVESTIMENTO as tela from CONFIGURACAO where ID_USUARIO = :pUser');
+    query.Query1.ParamByName('pUser').AsInteger := id_usuarioLogado;
+    query.Query1.Open();
+
+    validacao := query.Query1.FieldByName('tela').AsString;
+
+    if validacao = 's' then
+      p_investimentos.Visible := true
+    else
+      p_investimentos.Visible := false;
+
+  except
+    ShowMessage('Erro ao habilitar TELAS');
+  end;
+end;
+
+procedure Tfml_main.teste(sender: TObject);
+begin
+  fml_entradas.SetFocus;
+  fml_entradas.BringToFront;
+end;
+
+end.

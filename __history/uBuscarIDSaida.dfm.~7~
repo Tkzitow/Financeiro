@@ -1,0 +1,58 @@
+inherited FmlRegistros2: TFmlRegistros2
+  Left = 551
+  Top = 228
+  Caption = 'FmlRegistros2'
+  ClientWidth = 985
+  Position = poDesigned
+  TextHeight = 15
+  inherited p_: TPanel
+    Width = 985
+    inherited PageControl1: TPageControl
+      inherited TabSheet1: TTabSheet
+        TabVisible = False
+        inherited Panel1: TPanel
+          inherited Panel2: TPanel
+            Visible = False
+          end
+          inherited pValorTotalEntradaRegistro: TPanel
+            Visible = False
+          end
+          inherited btExcluiEntradaRegistro: TButton
+            Visible = False
+          end
+        end
+      end
+      inherited TabSheet2: TTabSheet
+        inherited Panel4: TPanel
+          inherited btExcluirSaidaRegistro: TButton
+            Visible = False
+          end
+          inherited pValorTotalSaidaRegistro: TPanel
+            Visible = False
+          end
+          inherited Panel6: TPanel
+            Visible = False
+          end
+          object btn_selecionar_registro_saida: TButton
+            Left = 342
+            Top = 508
+            Width = 75
+            Height = 25
+            Caption = 'Selecionar'
+            TabOrder = 26
+            OnClick = btn_selecionar_registro_saidaClick
+          end
+          object btn_cancelar_registro_saida: TButton
+            Left = 533
+            Top = 508
+            Width = 75
+            Height = 25
+            Caption = 'Cancelar'
+            TabOrder = 27
+            OnClick = btn_cancelar_registro_saidaClick
+          end
+        end
+      end
+    end
+  end
+end

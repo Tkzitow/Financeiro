@@ -1,0 +1,184 @@
+object fml_saidas: Tfml_saidas
+  Left = 289
+  Top = 69
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'Cadastro de Sa'#237'das'
+  ClientHeight = 430
+  ClientWidth = 462
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poDesigned
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  TextHeight = 15
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 462
+    Height = 430
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 458
+    ExplicitHeight = 429
+    object Label1: TLabel
+      Left = 40
+      Top = 67
+      Width = 54
+      Height = 15
+      Caption = 'Finalidade'
+    end
+    object Label2: TLabel
+      Left = 190
+      Top = 67
+      Width = 24
+      Height = 15
+      Caption = 'Item'
+    end
+    object Label3: TLabel
+      Left = 325
+      Top = 67
+      Width = 32
+      Height = 15
+      Caption = 'Conta'
+    end
+    object Label4: TLabel
+      Left = 40
+      Top = 163
+      Width = 26
+      Height = 15
+      Caption = 'Valor'
+    end
+    object Label5: TLabel
+      Left = 247
+      Top = 163
+      Width = 20
+      Height = 15
+      Caption = 'Qtd'
+    end
+    object Label6: TLabel
+      Left = 336
+      Top = 163
+      Width = 24
+      Height = 15
+      Caption = 'Data'
+    end
+    object Label7: TLabel
+      Left = 40
+      Top = 243
+      Width = 62
+      Height = 15
+      Caption = 'Observa'#231#227'o'
+    end
+    object cb_finalidade_saidas: TComboBox
+      Left = 40
+      Top = 88
+      Width = 121
+      Height = 23
+      TabOrder = 0
+      OnChange = cb_finalidade_saidasChange
+    end
+    object cb_item_saidas: TComboBox
+      Left = 190
+      Top = 88
+      Width = 108
+      Height = 23
+      TabOrder = 1
+    end
+    object edt_valor_saidas: TEdit
+      Left = 40
+      Top = 184
+      Width = 153
+      Height = 23
+      TabOrder = 4
+      OnChange = edt_valor_saidasChange
+      OnClick = edt_valor_saidasClick
+    end
+    object edt_qtd: TEdit
+      Left = 247
+      Top = 184
+      Width = 41
+      Height = 23
+      Alignment = taCenter
+      TabOrder = 5
+      Text = '1'
+      OnChange = edt_qtdChange
+      OnClick = edt_qtdClick
+    end
+    object data_saidas: TDateTimePicker
+      Left = 336
+      Top = 184
+      Width = 89
+      Height = 23
+      Date = 45369.000000000000000000
+      Time = 0.629125416664464900
+      TabOrder = 6
+    end
+    object edt_obs_saidas: TEdit
+      Left = 40
+      Top = 264
+      Width = 385
+      Height = 23
+      TabOrder = 7
+      OnClick = edt_obs_saidasClick
+    end
+    object cb_conta_saidas: TComboBox
+      Left = 325
+      Top = 88
+      Width = 100
+      Height = 23
+      TabOrder = 2
+    end
+    object btn_ok_saidas: TButton
+      Left = 40
+      Top = 344
+      Width = 100
+      Height = 45
+      Caption = 'Ok'
+      TabOrder = 8
+      OnClick = btn_ok_saidasClick
+    end
+    object btn_cancelar_saidas: TButton
+      Left = 325
+      Top = 344
+      Width = 100
+      Height = 45
+      Caption = 'Cancelar'
+      TabOrder = 10
+      OnClick = btn_cancelar_saidasClick
+    end
+    object btn_limpar_saidas: TButton
+      Left = 188
+      Top = 344
+      Width = 100
+      Height = 45
+      Caption = 'Limpar'
+      TabOrder = 9
+      OnClick = btn_limpar_saidasClick
+    end
+    object CheckBox1: TCheckBox
+      Left = 191
+      Top = 117
+      Width = 97
+      Height = 17
+      Caption = 'Fixo'
+      TabOrder = 3
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 419
+      Width = 460
+      Height = 10
+      Align = alBottom
+      Color = clRed
+      ParentBackground = False
+      TabOrder = 11
+      ExplicitTop = 409
+    end
+  end
+end
